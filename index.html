@@ -540,25 +540,26 @@
              <!-- 隐藏某个文章 -->
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2021/08/24/hello-world/">
+                    <a href="/2021/08/21/notes/2021-08-21-time-package-ticker/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                            <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="time包的Ticker">
                             
-                            <span class="card-title">Hello World</span>
+                            <span class="card-title">time包的Ticker</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
+                                Ticker结构体一个Ticker拥有一个通道，每隔一段时间传递一次tick
+1234type Ticker struct &#123;	C &lt;-chan Time // 周期性传递时间信息的通道。	r runtimeTimer&#1
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-24
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-21
                             </span>
                             <span class="publish-author">
                                 
@@ -569,6 +570,201 @@
                         </div>
                     </div>
 
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Golang/">
+                            <span class="chip bg-color">Golang</span>
+                        </a>
+                        
+                        <a href="/tags/Ticker/">
+                            <span class="chip bg-color">Ticker</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/08/14/notes/2021-08-14-base32-bian-ma-jie-ma/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="base32编码解码">
+                            
+                            <span class="card-title">base32编码解码</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                常量
+StdPadding：使用rune类型的=作为标准填充字符。
+NoPadding：-1 无填充。
+
+变量RFC 4648定义的标准base32编码。
+1var StdEncoding = NewEncoding(encodeStd)
+
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-14
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                PEAKBRO
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/base32/">
+                            <span class="chip bg-color">base32</span>
+                        </a>
+                        
+                        <a href="/tags/Golang/">
+                            <span class="chip bg-color">Golang</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/08/09/trans/2021-08-02-tcmalloc-thread-caching-malloc/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="TCMalloc : Thread-Caching Malloc【译】">
+                            
+                            <span class="card-title">TCMalloc : Thread-Caching Malloc【译】</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                TCMalloc
+动机
+用法
+概述
+小对象分配
+大对象分配
+Spans
+解除分配
+小对象的中央空闲列表
+线程缓存的垃圾收集
+性能说明
+PTMalloc2单元测试
+
+
+注意事项
+
+动机原文​    TCMalloc is faster tha
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-09
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                PEAKBRO
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Golang/">
+                            <span class="chip bg-color">Golang</span>
+                        </a>
+                        
+                        <a href="/tags/%E8%AF%91%E6%96%87/">
+                            <span class="chip bg-color">译文</span>
+                        </a>
+                        
+                        <a href="/tags/TCMalloc/">
+                            <span class="chip bg-color">TCMalloc</span>
+                        </a>
+                        
+                        <a href="/tags/GC/">
+                            <span class="chip bg-color">GC</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+              <!-- 隐藏某个文章 -->
+            
+             <!-- 隐藏某个文章 -->
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/05/09/trans/2021-05-09-grpc-long-lived-streaming-trans/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="gRPC长期流式传输【译】">
+                            
+                            <span class="card-title">gRPC长期流式传输【译】</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                
+预计阅读时间：13分钟​    在这篇博客文章中，我将探讨一种实现gRPC长期流式传输的方法。使用gRPC非常适合云原生应用程序，这主要是因为它很现代，带宽和CPU效率以及低延迟，这正是分布式系统所需的。
+​    如果您正在阅读本文，我
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-09
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-user fa-fw"></i>
+                                PEAKBRO
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/Golang/">
+                            <span class="chip bg-color">Golang</span>
+                        </a>
+                        
+                        <a href="/tags/gRPC/">
+                            <span class="chip bg-color">gRPC</span>
+                        </a>
+                        
+                        <a href="/tags/%E8%AF%91%E6%96%87/">
+                            <span class="chip bg-color">译文</span>
+                        </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -653,7 +849,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">75</span>
+                        class="white-color">10.1k</span>
             
             
             

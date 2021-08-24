@@ -1,0 +1,1442 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="TCMalloc : Thread-Caching Malloc【译】, PEAKBRO">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>TCMalloc : Thread-Caching Malloc【译】 | PEAKBRO</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">PEAKBRO</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">PEAKBRO</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/blinkfox/hexo-theme-matery" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/blinkfox/hexo-theme-matery" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/3.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">TCMalloc : Thread-Caching Malloc【译】</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Golang/">
+                                <span class="chip bg-color">Golang</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%AF%91%E6%96%87/">
+                                <span class="chip bg-color">译文</span>
+                            </a>
+                        
+                            <a href="/tags/TCMalloc/">
+                                <span class="chip bg-color">TCMalloc</span>
+                            </a>
+                        
+                            <a href="/tags/GC/">
+                                <span class="chip bg-color">GC</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-08-09
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-08-24
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    5.9k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    27 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="TCMalloc"><a href="#TCMalloc" class="headerlink" title="TCMalloc"></a>TCMalloc</h2><ul>
+<li><a href="#%E5%8A%A8%E6%9C%BA">动机</a></li>
+<li><a href="#%E7%94%A8%E6%B3%95">用法</a></li>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#%E5%B0%8F%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D">小对象分配</a></li>
+<li><a href="#%E5%A4%A7%E5%AF%B9%E8%B1%A1%E5%88%86%E9%85%8D">大对象分配</a></li>
+<li><a href="#Spans">Spans</a></li>
+<li><a href="#%E8%A7%A3%E9%99%A4%E5%88%86%E9%85%8D">解除分配</a></li>
+<li><a href="#%E5%B0%8F%E5%AF%B9%E8%B1%A1%E7%9A%84%E4%B8%AD%E5%A4%AE%E7%A9%BA%E9%97%B2%E5%88%97%E8%A1%A8">小对象的中央空闲列表</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E7%BC%93%E5%AD%98%E7%9A%84%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86">线程缓存的垃圾收集</a></li>
+<li><a href="#%E6%80%A7%E8%83%BD%E8%AF%B4%E6%98%8E">性能说明</a><ul>
+<li><a href="#PTMalloc2%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95">PTMalloc2单元测试</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">注意事项</a></li>
+</ul>
+<h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><h3 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h3><p>​    TCMalloc is faster than the glibc 2.3 malloc (available as a separate library called ptmalloc2) and other mallocs that I have tested. ptmalloc2 takes approximately 300 nanoseconds to execute a malloc/free pair on a 2.8 GHz P4 (for small objects). The TCMalloc implementation takes approximately 50 nanoseconds for the same operation pair. Speed is important for a malloc implementation because if malloc is not fast enough, application writers are inclined to write their own custom free lists on top of malloc. This can lead to extra complexity, and more memory usage unless the application writer is very careful to appropriately size the free lists and scavenge idle objects out of the free list</p>
+<p>​    TCMalloc also reduces lock contention for multi-threaded programs. For small objects, there is virtually zero contention. For large objects, TCMalloc tries to use fine grained and efficient spinlocks. ptmalloc2 also reduces lock contention by using per-thread arenas but there is a big problem with ptmalloc2’s use of per-thread arenas. In ptmalloc2 memory can never move from one arena to another. This can lead to huge amounts of wasted space. For example, in one Google application, the first phase would allocate approximately 300MB of memory for its data structures. When the first phase finished, a second phase would be started in the same address space. If this second phase was assigned a different arena than the one used by the first phase, this phase would not reuse any of the memory left after the first phase and would add another 300MB to the address space. Similar memory blowup problems were also noticed in other applications.</p>
+<p>​    Another benefit of TCMalloc is space-efficient representation of small objects. For example, N 8-byte objects can be allocated while using space approximately <code>8N * 1.01</code> bytes. I.e., a one-percent space overhead. ptmalloc2 uses a four-byte header for each object and (I think) rounds up the size to a multiple of 8 bytes and ends up using <code>16N</code> bytes.</p>
+<h3 id="译"><a href="#译" class="headerlink" title="译"></a>译</h3><p>​    TCMalloc比glibc2.3 malloc（作为一个名为ptmalloc2的单独库提供）和我测试过的其他malloc更快。ptmalloc2在2.8GHz P4（用于小对象）上执行一次malloc/free对大约需要300纳秒。对于相同的操作，TCMalloc实现大约需要50纳秒。对于malloc的实现来说速度是非常重要的，因为如果 malloc 不够快，应用程序编写者倾向于在 malloc 之上编写他们自己的自定义空闲列表。这会导致额外的复杂性和更多的内存使用，除非应用程序编写者非常小心地适当调整空闲列表的大小并从空闲列表中清除空闲对象。</p>
+<p>​    TCMalloc还减少了多线程程序的锁争用。对于小对象，几乎为零争用。对于大对象，TCMalloc尝试使用细粒度的和高效的自旋锁。ptmalloc2 还通过使用每线程 域（arenas） 来减少锁争用，但是 ptmalloc2 使用每线程 域（arenas）存在一个大问题。在ptmalloc2中，内存永远无法从一个域（arena）移动到另一个域（arena）。这可能会导致大量空间浪费。例如，在一个 Google 应用程序中，第一阶段将为其数据结构分配大约 300MB 的内存。当第一个阶段完成时，第二个阶段将在相同的地址空间中开始。如果第二阶段被分配到一个不同于第一阶段使用的域（arena），这个阶段将不会重用第一阶段之后留下的任何内存，并将另外 300MB 添加到地址空间。在其他应用程序中也发现了类似的内存爆炸问题。</p>
+<p>​    TCMalloc 的另一个好处是小对象的空间高效表示。例如，可以分配 N 个 8 字节的对象总共需要 <code>8N*1.01</code>字节的空间。 即，百分之一的空间开销。ptmalloc2 为每个对象使用一个四字节的标头，并且（我认为）将大小四舍五入为 8 字节的倍数，最终使用<code>16N</code>字节。</p>
+<h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><h3 id="原文-1"><a href="#原文-1" class="headerlink" title="原文"></a>原文</h3><p>​    To use TCmalloc, just link tcmalloc into your application via the “-ltcmalloc” linker flag.</p>
+<p>​    You can use tcmalloc in applications you didn’t compile yourself, by using LD_PRELOAD:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ LD_PRELOAD=&quot;/usr/lib/libtcmalloc.so&quot; </span><br></pre></td></tr></table></figure>
+
+<p>​    LD_PRELOAD is tricky, and we don’t necessarily recommend this mode of usage.</p>
+<p>​    TCMalloc includes a <a target="_blank" rel="noopener" href="http://goog-perftools.sourceforge.net/doc/heap_checker.html">heap checker</a> and <a target="_blank" rel="noopener" href="http://goog-perftools.sourceforge.net/doc/heap_profiler.html">heap profiler</a> as well.</p>
+<p>​    If you’d rather link in a version of TCMalloc that does not include the heap profiler and checker (perhaps to reduce binary size for a static binary), you can link in <code>libtcmalloc_minimal</code> instead.</p>
+<h3 id="译-1"><a href="#译-1" class="headerlink" title="译"></a>译</h3><p>​    要使用 TCmalloc，只需通过“-ltcmalloc”链接器标志将 tcmalloc 链接到您的应用程序。</p>
+<p>​    您可以在不是自己编译的应用程序中使用 tcmalloc，方法是使用 LD_PRELOAD：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ LD_PRELOAD=&quot;/usr/lib/libtcmalloc.so&quot; </span><br></pre></td></tr></table></figure>
+
+<p>​    LD_PRELOAD 很棘手，我们不一定推荐这种使用模式。</p>
+<p>​    TCMalloc 还包括一个堆检查器和堆分析器。</p>
+<p>​    如果您更愿意链接不包含堆分析器和检查器的 TCMalloc 版本（可能是为了减少静态二进制文件的二进制大小），您可以使用链接<code>libtcmalloc_minimal</code>代替。</p>
+<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><h3 id="原文-2"><a href="#原文-2" class="headerlink" title="原文"></a>原文</h3><p>​    TCMalloc assigns each thread a thread-local cache. Small allocations are satisfied from the thread-local cache. Objects are moved from central data structures into a thread-local cache as needed, and periodic garbage collections are used to migrate memory back from a thread-local cache into the central data structures.</p>
+<p><img src="/img/trans/overview.gif"></p>
+<p>​    TCMalloc treates objects with size &lt;= 32K (“small” objects) differently from larger objects. Large objects are allocated directly from the central heap using a page-level allocator (a page is a 4K aligned region of memory). I.e., a large object is always page-aligned and occupies an integral number of pages.</p>
+<p>​    A run of pages can be carved up into a sequence of small objects, each equally sized. For example a run of one page (4K) can be carved up into 32 objects of size 128 bytes each.</p>
+<h3 id="译-2"><a href="#译-2" class="headerlink" title="译"></a>译</h3><p>​    TCMalloc为每个线程分配一个线程本地缓存。小对象的分配直接走线程本地缓存。根据需要，对象从中央数据结构移动到线程本地缓存中，并使用定期垃圾收集将内存从线程本地缓存迁移回中央数据结构。</p>
+<p>​    TCMalloc 将size &lt;= 32K 的对象作为小对象，大于32K的对象为大对象。大对象使用页面级分配器直接从中央堆分配（页面是 4K 对齐的内存区域）。即，一个大对象总是页面对齐并占据整数页。</p>
+<p>​    一连串的页面可以被分割成一系列大小相同的小对象。例如，一页 (4K) 的页面可以分成 32 个大小为 128 字节的对象。</p>
+<h2 id="小对象分配"><a href="#小对象分配" class="headerlink" title="小对象分配"></a>小对象分配</h2><h3 id="原文-3"><a href="#原文-3" class="headerlink" title="原文"></a>原文</h3><p>Each small object size maps to one of approximately 170 allocatable size-classes. For example, all allocations in the range 961 to 1024 bytes are rounded up to 1024. The size-classes are spaced so that small sizes are separated by 8 bytes, larger sizes by 16 bytes, even larger sizes by 32 bytes, and so forth. The maximal spacing (for sizes &gt;= ~2K) is 256 bytes.</p>
+<p>A thread cache contains a singly linked list of free objects per size-class.</p>
+<p><img src="/img/trans/threadheap.gif"></p>
+<p>When allocating a small object: (1) We map its size to the corresponding size-class. (2) Look in the corresponding free list in the thread cache for the current thread. (3) If the free list is not empty, we remove the first object from the list and return it. When following this fast path, TCMalloc acquires no locks at all. This helps speed-up allocation significantly because a lock/unlock pair takes approximately 100 nanoseconds on a 2.8 GHz Xeon.</p>
+<p>If the free list is empty: (1) We fetch a bunch of objects from a central free list for this size-class (the central free list is shared by all threads). (2) Place them in the thread-local free list. (3) Return one of the newly fetched objects to the applications.</p>
+<p>If the central free list is also empty: (1) We allocate a run of pages from the central page allocator. (2) Split the run into a set of objects of this size-class. (3) Place the new objects on the central free list. (4) As before, move some of these objects to the thread-local free list.</p>
+<h3 id="译-3"><a href="#译-3" class="headerlink" title="译"></a>译</h3><p>​    每个小对象的字节数被映射到大约 170 个可分配的 size-class 中的一个。例如，961 到 1024 字节范围内的所有分配都会向上舍入为 1024。 size-class 被隔开，以便小尺寸由 8 个字节分隔，较大尺寸由 16 个字节分隔，更大尺寸由 32 个字节分隔，依此类推。最大间距（大小 &gt;= ~2K）为 256 字节。</p>
+<p>​    线程缓存包含每个 size-class 的空闲对象的单向链接列表。</p>
+<p>​    分配小对象时：</p>
+<ul>
+<li><p>我们将其大小映射到相应的 size-class。</p>
+</li>
+<li><p>在线程缓存中查找当前线程对应的空闲列表。</p>
+</li>
+<li><p>如果空闲列表不为空，我们从列表中删除第一个对象并返回它。</p>
+<p>当我们按照这种方式分配时，TCMalloc不需要任何锁。这就可以极大提高分配的速度，因为锁/解锁操作在一个2.8GHz Xeon上大约需要100纳秒的时间。    </p>
+<p>如果空闲列表为空：</p>
+</li>
+<li><p>我们从这个 size-class 的中央空闲列表中获取一堆对象（中央空闲列表由所有线程共享）。</p>
+</li>
+<li><p>将它们放入线程局部空闲列表中。</p>
+</li>
+<li><p>将新获取的对象之一返回给应用程序。</p>
+<p>如果中央空闲列表也为空：</p>
+</li>
+<li><p>我们从中央页面分配器分配一系列页面。</p>
+</li>
+<li><p>切分这些页放在对应的size-class的集合中。</p>
+</li>
+<li><p>将新对象放在中央空闲列表上。</p>
+</li>
+<li><p>和以前一样，将这些对象中的一些移动到线程本地空闲列表中。</p>
+</li>
+</ul>
+<h2 id="大对象分配"><a href="#大对象分配" class="headerlink" title="大对象分配"></a>大对象分配</h2><h3 id="原文-4"><a href="#原文-4" class="headerlink" title="原文"></a>原文</h3><p>​    A large object size (&gt; 32K) is rounded up to a page size (4K) and is handled by a central page heap. The central page heap is again an array of free lists. For <code>i &lt; 256</code>, the <code>k</code>th entry is a free list of runs that consist of <code>k</code> pages. The <code>256</code>th entry is a free list of runs that have length <code>&gt;= 256</code> pages:</p>
+<p><img src="/img/trans/pageheap.gif"></p>
+<p>​    An allocation for <code>k</code> pages is satisfied by looking in the <code>k</code>th free list. If that free list is empty, we look in the next free list, and so forth. Eventually, we look in the last free list if necessary. If that fails, we fetch memory from the system (using sbrk, mmap, or by mapping in portions of /dev/mem).</p>
+<p>​    If an allocation for <code>k</code> pages is satisfied by a run of pages of length &gt; <code>k</code>, the remainder of the run is re-inserted back into the appropriate free list in the page heap.</p>
+<h3 id="译-4"><a href="#译-4" class="headerlink" title="译"></a>译</h3><p>​    一个大对象的字节数（大于32k）按页（4k）对齐在中央页堆。中心页堆又是一个空闲列表数组。对于i&lt;256，第k项是一个包好k页的自由链表。但是第256项的自由链表的元素的内存是大于等于256页的字节数。</p>
+<p>​    分配k页内存优先从第k个自由链表查找。如果这个自由链表为空，我会从下一个自由链表中找，如果也是空，继续找下一个。如果需要，我们会遍历到最后一个自由链表。如果失败了，我们直接向系统申请内存（使用sbrk、mmap、或者映射到 /dev/mem）。</p>
+<p>​    如果在申请分配k个页时候实际分配的内存页大于k,剩余的页会被放回对应的页堆的自由链表中。</p>
+<h2 id="Spans"><a href="#Spans" class="headerlink" title="Spans"></a>Spans</h2><h3 id="原文-5"><a href="#原文-5" class="headerlink" title="原文"></a>原文</h3><p>​    The heap managed by TCMalloc consists of a set of pages. A run of contiguous pages is represented by a <code>Span</code> object. A span can either be <em>allocated</em>, or <em>free</em>. If free, the span is one of the entries in a page heap linked-list. If allocated, it is either a large object that has been handed off to the application, or a run of pages that have been split up into a sequence of small objects. If split into small objects, the size-class of the objects is recorded in the span.</p>
+<p>​    A central array indexed by page number can be used to find the span to which a page belongs. For example, span <em>a</em> below occupies 2 pages, span <em>b</em> occupies 1 page, span <em>c</em> occupies 5 pages and span <em>d</em> occupies 3 pages.</p>
+<p><img src="/img/trans/spanmap.gif"></p>
+<p>​    A 32-bit address space can fit 2^20 4K pages, so this central array takes 4MB of space, which seems acceptable. On 64-bit machines, we use a 3-level radix tree instead of an array to map from a page number to the corresponding span pointer.</p>
+<h3 id="译-5"><a href="#译-5" class="headerlink" title="译"></a>译</h3><p>​    TCMalloc 管理的堆由一系列的页组成。一系列连续的页可以用一个span对象来表示。一个span既可以被分配，也可以被释放。</p>
+<ul>
+<li>如果空闲，则span 是页堆链表中的条目之一。</li>
+<li>如果已分配，它要么是已移交给应用程序的大对象，要么是已拆分为一系列小对象的连续页。</li>
+<li>如果拆分为小对象，则将对象的size-class记录在span中。</li>
+</ul>
+<p>​    以页码为索引的中央数组可用于查找页所属的span。比如下面的span <em>a</em>占2页，span <em>b</em>占1页，span <em>c</em>占5页，span <em>d</em>占3页。</p>
+<p>​    一个 32 位的地址空间可以容纳 2^20 个 4K 的页，所以这个中央数组需要 4MB 的空间，这似乎是可以接受的。在 64 位机器上，我们使用 3 级基数树代替数组来从页码映射到相应的span指针。</p>
+<h2 id="解除分配"><a href="#解除分配" class="headerlink" title="解除分配"></a>解除分配</h2><h3 id="原文-6"><a href="#原文-6" class="headerlink" title="原文"></a>原文</h3><p>​    When an object is deallocated, we compute its page number and look it up in the central array to find the corresponding span object. The span tells us whether or not the object is small, and its size-class if it is small. If the object is small, we insert it into the appropriate free list in the current thread’s thread cache. If the thread cache now exceeds a predetermined size (2MB by default), we run a garbage collector that moves unused objects from the thread cache into central free lists.</p>
+<p>​    If the object is large, the span tells us the range of pages covered by the object. Suppose this range is <code>[p,q]</code>. We also lookup the spans for pages <code>p-1</code> and <code>q+1</code>. If either of these neighboring spans are free, we coalesce them with the <code>[p,q]</code> span. The resulting span is inserted into the appropriate free list in the page heap.</p>
+<h3 id="译-6"><a href="#译-6" class="headerlink" title="译"></a>译</h3><p>​    当一个对象被释放时，我们计算它的页码并在中央数组中查找它以找到相应的span对象。span告诉我们是否是小对象，以及它的size-class是否是小。</p>
+<ul>
+<li><p>如果释放的是小对象，那么我们就将它插入到当前线程的线程缓存中适当的空闲队列中。如果线程缓存现在超过预订大小（默认2MB）,我们将运行垃圾收集器，将未使用的对象从线程缓存移动到中央空闲列表中。</p>
+</li>
+<li><p> 如果释放的是大对象，span告诉我们对象覆盖的范围。假设这个范围是<code>[p,q]</code>。 我们还查找页“p-1”和“q+1”的spans。如果这些相邻spans中的任何一个是空闲的，我们将它们与“[p,q]” span合并。生成的span被插入到页堆中适当的空闲列表中。</p>
+</li>
+</ul>
+<h2 id="小对象的中央空闲列表"><a href="#小对象的中央空闲列表" class="headerlink" title="小对象的中央空闲列表"></a>小对象的中央空闲列表</h2><h3 id="原文-7"><a href="#原文-7" class="headerlink" title="原文"></a>原文</h3><p>​    As mentioned before, we keep a central free list for each size-class. Each central free list is organized as a two-level data structure: a set of spans, and a linked list of free objects per span.</p>
+<p>​    An object is allocated from a central free list by removing the first entry from the linked list of some span. (If all spans have empty linked lists, a suitably sized span is first allocated from the central page heap.)</p>
+<p>​    An object is returned to a central free list by adding it to the linked list of its containing span. If the linked list length now equals the total number of small objects in the span, this span is now completely free and is returned to the page heap.</p>
+<h3 id="译-7"><a href="#译-7" class="headerlink" title="译"></a>译</h3><p>​    如前所述，我们为每个size-class保留一个中央空闲列表。 每个中央空闲列表被组织为一个两级数据结构：一组span，以及每个span的空闲对象链表。</p>
+<p>​    通过从某个span的链表中删除第一个条目，从中央空闲列表中分配对象。 （如果所有span都有空链表，则首先从中央页堆中分配一个合适大小的span。）</p>
+<p>​    通过将对象添加到span包含的链表中,，可以将其返回到中央空闲列表。 如果链表长度现在等于span中小对象的总数，那么这个span现在完全空闲并返回到页堆。</p>
+<h2 id="线程缓存的垃圾收集"><a href="#线程缓存的垃圾收集" class="headerlink" title="线程缓存的垃圾收集"></a>线程缓存的垃圾收集</h2><h3 id="原文-8"><a href="#原文-8" class="headerlink" title="原文"></a>原文</h3><p>​    A thread cache is garbage collected when the combined size of all objects in the cache exceeds 2MB. The garbage collection threshold is automatically decreased as the number of threads increases so that we don’t waste an inordinate amount of memory in a program with lots of threads.</p>
+<p>​    We walk over all free lists in the cache and move some number of objects from the free list to the corresponding central list.</p>
+<p>​    The number of objects to be moved from a free list is determined using a per-list low-water-mark <code>L</code>. <code>L</code> records the minimum length of the list since the last garbage collection. Note that we could have shortened the list by <code>L</code> objects at the last garbage collection without requiring any extra accesses to the central list. We use this past history as a predictor of future accesses and move <code>L/2</code> objects from the thread cache free list to the corresponding central free list. This algorithm has the nice property that if a thread stops using a particular size, all objects of that size will quickly move from the thread cache to the central free list where they can be used by other threads.</p>
+<h3 id="译-8"><a href="#译-8" class="headerlink" title="译"></a>译</h3><p>​    当缓存中所有对象的总大小超过 2MB 时，线程缓存将被垃圾回收。随着线程数量的增加，垃圾收集阈值会自动降低，这样我们就不会在具有大量线程的程序中浪费过多的内存。</p>
+<p>​    我们遍历缓存中的所有空闲列表，并将一定数量的对象从空闲列表移动到相应的中央列表。</p>
+<p>​    每个链表的低水位标记L决定了从空闲链中移出对象的数量。L记录了自从上一次垃圾收集操作之后本链表的最小长度。注意我们可以缩短链的长度，通过在前一次垃圾收集时移走L个对象，并且没有从中央链中获取其他对象。我们使用这个过去的记录来预测未来的情况，从线程缓存中移走L/2个对象到中央链表中。这个算法性能良好，如果一个线程停止使用某个特定大小的对象，该大小的所有对象将会很快的从线程缓存中迁移到中央空闲链中，以便被其他线程来使用。</p>
+<h2 id="性能说明"><a href="#性能说明" class="headerlink" title="性能说明"></a>性能说明</h2><h3 id="PTMalloc2单元测试"><a href="#PTMalloc2单元测试" class="headerlink" title="PTMalloc2单元测试"></a>PTMalloc2单元测试</h3><h3 id="原文-9"><a href="#原文-9" class="headerlink" title="原文"></a>原文</h3><p>​    The PTMalloc2 package (now part of glibc) contains a unittest program t-test1.c. This forks a number of threads and performs a series of allocations and deallocations in each thread; the threads do not communicate other than by synchronization in the memory allocator.</p>
+<p>​    t-test1 (included in google-perftools/tests/tcmalloc, and compiled as ptmalloc_unittest1) was run with a varying numbers of threads (1-20) and maximum allocation sizes (64 bytes - 32Kbytes). These tests were run on a 2.4GHz dual Xeon system with hyper-threading enabled, using Linux glibc-2.3.2 from RedHat 9, with one million operations per thread in each test. In each case, the test was run once normally, and once with LD_PRELOAD=libtcmalloc.so.</p>
+<p>​    The graphs below show the performance of TCMalloc vs PTMalloc2 for several different metrics. Firstly, total operations (millions) per elapsed second vs max allocation size, for varying numbers of threads. The raw data used to generate these graphs (the output of the “time” utility) is available in t-test1.times.txt.</p>
+<table>
+<thead>
+<tr>
+<th><img src="/img/trans/tcmalloc-opspersec.vs.size.1.threads.png"></th>
+<th><img src="/img/trans/tcmalloc-opspersec.vs.size.2.threads.png" alt="img"></th>
+<th><img src="/img/trans/tcmalloc-opspersec.vs.size.3.threads.png" alt="img"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="/img/trans/tcmalloc-opspersec.vs.size.4.threads.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspersec.vs.size.5.threads.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspersec.vs.size.8.threads.png" alt="img"></td>
+</tr>
+<tr>
+<td><img src="/img/trans/tcmalloc-opspersec.vs.size.12.threads.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspersec.vs.size.16.threads.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspersec.vs.size.20.threads.png" alt="img"></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>TCMalloc is much more consistently scalable than PTMalloc2 - for all thread counts &gt;1 it achieves ~7-9 million ops/sec for small allocations, falling to ~2 million ops/sec for larger allocations. The single-thread case is an obvious outlier, since it is only able to keep a single processor busy and hence can achieve fewer ops/sec. PTMalloc2 has a much higher variance on operations/sec - peaking somewhere around 4 million ops/sec for small allocations and falling to &lt;1 million ops/sec for larger allocations.</p>
+</li>
+<li><p>TCMalloc is faster than PTMalloc2 in the vast majority of cases, and particularly for small allocations. Contention between threads is less of a problem in TCMalloc.</p>
+</li>
+<li><p>TCMalloc’s performance drops off as the allocation size increases. This is because the per-thread cache is garbage-collected when it hits a threshold (defaulting to 2MB). With larger allocation sizes, fewer objects can be stored in the cache before it is garbage-collected.</p>
+</li>
+<li><p>There is a noticeably drop in the TCMalloc performance at ~32K maximum allocation size; at larger sizes performance drops less quickly. This is due to the 32K maximum size of objects in the per-thread caches; for objects larger than this tcmalloc allocates from the central page heap.</p>
+<p>Next, operations (millions) per second of CPU time vs number of threads, for max allocation size 64 bytes - 128 Kbytes.</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.64.bytes.png" alt="img"></th>
+<th><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.256.bytes.png" alt="img"></th>
+<th><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.1024.bytes.png" alt="img"></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.4096.bytes.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.8192.bytes.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.16384.bytes.png" alt="img"></td>
+</tr>
+<tr>
+<td><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.32768.bytes.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.65536.bytes.png" alt="img"></td>
+<td><img src="/img/trans/tcmalloc-opspercpusec.vs.threads.131072.bytes.png" alt="img"></td>
+</tr>
+</tbody></table>
+<p>​    Here we see again that TCMalloc is both more consistent and more efficient than PTMalloc2. For max allocation sizes &lt;32K, TCMalloc typically achieves ~2-2.5 million ops per second of CPU time with a large number of threads, whereas PTMalloc achieves generally 0.5-1 million ops per second of CPU time, with a lot of cases achieving much less than this figure. Above 32K max allocation size, TCMalloc drops to 1-1.5 million ops per second of CPU time, and PTMalloc drops almost to zero for large numbers of threads (i.e. with PTMalloc, lots of CPU time is being burned spinning waiting for locks in the heavily multi-threaded case).</p>
+<h3 id="译-9"><a href="#译-9" class="headerlink" title="译"></a>译</h3><p>​    PTMalloc2包（现在是glibc的一部分）包含一个单元测试程序 t-test1.c。这会派生多个线程并在每个线程中执行一系列分配和释放；除了通过内存分配器中的同步之外，线程不进行通信。</p>
+<p>​    t-test1（包含在 google-perftools/tests/tcmalloc 中，并编译为 ptmalloc_unittest1）以不同数量的线程（1-20）和最大分配大小（64 字节 - 32 KB）运行。这些测试在启用了超线程的 2.4GHz 双 Xeon 系统上运行，使用来自 RedHat 9 的 Linux glibc-2.3.2，每个测试中每个线程有 100 万次操作。在每种情况下，测试都正常运行一次，并使用 LD_PRELOAD=libtcmalloc.so 运行一次。</p>
+<p>​    下图显示了 TCMalloc 与 PTMalloc2 在几个不同指标下的性能。首先，对于不同数量的线程，每秒总操作数（百万）与最大分配大小。用于生成这些图形的原始数据（“时间”实用程序的输出）在 t-test1.times.txt 中可用。</p>
+<ul>
+<li>TCMalloc 比 PTMalloc2 具有更高的可扩展性 - 对于所有线程数大于 1 的情况，小分配实现约 7-9 百万次操作/秒，较大分配时降至约 200 万次操作/秒。单线程情况是一个明显的异常值，因为它只能保持单个处理器忙碌，因此可以实现更少的操作/秒。 PTMalloc2 在操作/秒上的差异要大得多——小分配的峰值约为 400 万次操作/秒，而较大的分配则下降到 &lt;100 万次操作/秒。</li>
+<li>在绝大多数情况下，TCMalloc 比 PTMalloc2 快，特别是对于小分配。线程之间的争用在 TCMalloc 中不是问题。</li>
+<li>TCMalloc 的性能随着分配大小的增加而下降。这是因为每线程缓存在达到阈值（默认为 2MB）时会被垃圾收集。使用更大的分配大小，在缓存被垃圾收集之前可以存储在缓存中的对象更少。</li>
+<li>TCMalloc 性能在 ~32K 最大分配大小时显着下降；在较大的尺寸下，性能下降的速度较慢。这是由于每个线程缓存中对象的最大大小为 32K；对于大于此 tcmalloc 从中央页堆分配的对象。</li>
+</ul>
+<p>​    接下来，CPU 时间每秒的操作数（百万）与线程数的关系，最大分配大小为 64 字节 - 128 KB。</p>
+<p>​    在这里我们再次看到 TCMalloc 比 PTMalloc2 更一致、更高效。 对于最大分配大小小于 32K 的情况，TCMalloc 通常在大量线程的情况下实现每秒约 2-250 万次操作，而 PTMalloc 通常实现每秒 0.5-100 万次操作，在很多情况下实现了很多 低于这个数字。 超过 32K 的最大分配大小，TCMalloc 的 CPU 时间下降到每秒 1-150 万次操作，对于大量线程，PTMalloc 几乎下降到零（即使用 PTMalloc，大量 CPU 时间正在消耗大量 CPU 时间等待锁 多线程情况）。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="原文-10"><a href="#原文-10" class="headerlink" title="原文"></a>原文</h3><p>​    For some systems, TCMalloc may not work correctly on with applications that aren’t linked against libpthread.so (or the equivalent on your OS). It should work on Linux using glibc 2.3, but other OS/libc combinations have not been tested.</p>
+<p>​    TCMalloc may be somewhat more memory hungry than other mallocs, though it tends not to have the huge blowups that can happen with other mallocs. In particular, at startup TCMalloc allocates approximately 6 MB of memory. It would be easy to roll a specialized version that trades a little bit of speed for more space efficiency.</p>
+<p>​    TCMalloc currently does not return any memory to the system.</p>
+<p>​    Don’t try to load TCMalloc into a running binary (e.g., using JNI in Java programs). The binary will have allocated some objects using the system malloc, and may try to pass them to TCMalloc for deallocation. TCMalloc will not be able to handle such objects.</p>
+<h3 id="译-10"><a href="#译-10" class="headerlink" title="译"></a>译</h3><p>​    对于某些系统，TCMalloc可能无法在不与libpthread.so相关联的应用程序上正常工作。它应该工作在使用glibc 2.3的Linux上，但其他的 OS/libc组合还没有经过测试。</p>
+<p>​    TCMalloc可能比其他mallocs更需要内存，尽管它不会发生其他mallocs可能发生的巨大爆炸。特别是在启动时，TCMalloc需分配6MB的内存。推出一个专门的版本会很容易，该版本以一点速度换取更多空间效率。</p>
+<p>​    TCMalloc 目前不会向系统返回任何内存。</p>
+<p>​    不要尝试将 TCMalloc 加载到正在运行的二进制文件中（例如，在 Java 程序中使用 JNI）。 二进制文件将使用系统 malloc 分配一些对象，并可能尝试将它们传递给 TCMalloc 进行释放。 TCMalloc 将无法处理此类对象。</p>
+<h3 id="原文地址"><a href="#原文地址" class="headerlink" title="原文地址"></a>原文地址</h3><p><a target="_blank" rel="noopener" href="http://goog-perftools.sourceforge.net/doc/tcmalloc.html">TCMalloc : Thread-Caching Malloc</a></p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">PEAKBRO</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://wangyufenggogogo.github.io/2021/08/09/trans/2021-08-02-tcmalloc-thread-caching-malloc/">http://wangyufenggogogo.github.io/2021/08/09/trans/2021-08-02-tcmalloc-thread-caching-malloc/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">PEAKBRO</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Golang/">
+                                    <span class="chip bg-color">Golang</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%AF%91%E6%96%87/">
+                                    <span class="chip bg-color">译文</span>
+                                </a>
+                            
+                                <a href="/tags/TCMalloc/">
+                                    <span class="chip bg-color">TCMalloc</span>
+                                </a>
+                            
+                                <a href="/tags/GC/">
+                                    <span class="chip bg-color">GC</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/08/14/notes/2021-08-14-base32-bian-ma-jie-ma/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="base32编码解码">
+                        
+                        <span class="card-title">base32编码解码</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-14
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            PEAKBRO
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/base32/">
+                        <span class="chip bg-color">base32</span>
+                    </a>
+                    
+                    <a href="/tags/Golang/">
+                        <span class="chip bg-color">Golang</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/05/09/trans/2021-05-09-grpc-long-lived-streaming-trans/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="gRPC长期流式传输【译】">
+                        
+                        <span class="card-title">gRPC长期流式传输【译】</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-09
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            PEAKBRO
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Golang/">
+                        <span class="chip bg-color">Golang</span>
+                    </a>
+                    
+                    <a href="/tags/gRPC/">
+                        <span class="chip bg-color">gRPC</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%AF%91%E6%96%87/">
+                        <span class="chip bg-color">译文</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+
+    <div class="container row center-align"
+         style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2021</span>
+            
+            <span id="year">2019</span>
+            <a href="/about" target="_blank">PEAKBRO</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+                &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                        class="white-color">10.1k</span>
+            
+            
+            
+                
+            
+            
+                <span id="busuanzi_container_site_pv">
+                &nbsp;|&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;
+                    <span id="busuanzi_value_site_pv" class="white-color"></span>
+            </span>
+            
+            
+                <span id="busuanzi_container_site_uv">
+                &nbsp;|&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;
+                    <span id="busuanzi_value_site_uv" class="white-color"></span>
+            </span>
+            
+            <br>
+
+            <!-- 运行天数提醒. -->
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/blinkfox" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:1181062873@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=1181062873" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 1181062873" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="/atom.xml" class="tooltipped" target="_blank" data-tooltip="RSS 订阅" data-position="top" data-delay="50">
+        <i class="fas fa-rss"></i>
+    </a>
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
