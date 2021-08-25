@@ -413,12 +413,12 @@
                                 <span class="chip bg-color">Golang</span>
                             </a>
                         
-                            <a href="/tags/gRPC/">
-                                <span class="chip bg-color">gRPC</span>
-                            </a>
-                        
                             <a href="/tags/%E8%AF%91%E6%96%87/">
                                 <span class="chip bg-color">译文</span>
+                            </a>
+                        
+                            <a href="/tags/gRPC/">
+                                <span class="chip bg-color">gRPC</span>
                             </a>
                         
                     </div>
@@ -516,19 +516,33 @@
 </ul>
 <h3 id="创建gRPC-proto文件"><a href="#创建gRPC-proto文件" class="headerlink" title="创建gRPC proto文件"></a>创建gRPC proto文件</h3><p>​    在此处查看完整的proto文件：<a target="_blank" rel="noopener" href="https://github.com/omri86/longlived-grpc/blob/master/protos/longlived.proto">longlived.proto</a></p>
 <p>​    正如该帖子的标题所示，您将使用服务端流式RPC。 这是通过以下方式声明的：</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">service</span> <span class="title">Longlived</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">rpc</span> Subscribe(Request) <span class="keyword">returns</span> (stream Response) </span>&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="protobuf">service Longlived &#123;
+  rpc Subscribe(Request) returns (stream Response) &#123;&#125;
+&#125;
+</code></pre>
 <p>​    服务器将处理订阅请求（因此有Request参数），并将返回Response。 让我们看一下这两个对象：</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Request</span> </span>&#123;</span><br><span class="line">  <span class="built_in">int32</span> id = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Response</span> </span>&#123;</span><br><span class="line">  <span class="built_in">string</span> data = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="protobuf">message Request &#123;
+  int32 id = 1;
+&#125;
+message Response &#123;
+  string data = 1;
+&#125;
+</code></pre>
 <p>​    <code>Request</code>对象拥有一个ID，这将是客户端标识符。<code>Response</code>对象保存数据–这是您将从服务器发送到订阅的客户端的数据。</p>
 <p>​    proto文件还包含一个“取消订阅”一元RPC。 此功能将不会用作本教程的一部分，但可以为您提供有关如何退订的示例：</p>
-<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">rpc</span> Unsubscribe(Request) <span class="keyword">returns</span> (Response) </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="protobuf">rpc Unsubscribe(Request) returns (Response) &#123;&#125;
+</code></pre>
 <h3 id="创建服务端"><a href="#创建服务端" class="headerlink" title="创建服务端"></a>创建服务端</h3><p>​    在此处查看完整的服务端文件：<a target="_blank" rel="noopener" href="https://github.com/omri86/longlived-grpc/blob/master/server/server.go">server.go</a></p>
 <p>​    首先，让我们看一下服务端的结构体：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> longlivedServer <span class="keyword">struct</span> &#123;</span><br><span class="line">     protos.UnimplementedLonglivedServer</span><br><span class="line">     subscribers sync.Map <span class="comment">// subscribers is a concurrent map that holds mapping from a client ID to it&#x27;s subscriber</span></span><br><span class="line"> &#125;</span><br><span class="line"> <span class="keyword">type</span> sub <span class="keyword">struct</span> &#123;</span><br><span class="line">     stream   protos.Longlived_SubscribeServer <span class="comment">// stream is the server side of the RPC stream</span></span><br><span class="line">     finished <span class="keyword">chan</span>&lt;- <span class="keyword">bool</span>                      <span class="comment">// finished is used to signal closure of a client subscribing goroutine</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">type longlivedServer struct &#123;
+     protos.UnimplementedLonglivedServer
+     subscribers sync.Map // subscribers is a concurrent map that holds mapping from a client ID to it&#39;s subscriber
+ &#125;
+ type sub struct &#123;
+     stream   protos.Longlived_SubscribeServer // stream is the server side of the RPC stream
+     finished chan&lt;- bool                      // finished is used to signal closure of a client subscribing goroutine
+ &#125;
+</code></pre>
 <ul>
 <li>在<a target="_blank" rel="noopener" href="https://github.com/grpc/grpc-go/issues/3669">该线程</a>和此<a target="_blank" rel="noopener" href="https://github.com/grpc/grpc-go/blob/master/cmd/protoc-gen-go-grpc/README.md#future-proofing-services">README</a>文件中可以找到#2的解释。</li>
 <li>订阅者结构体将保留每个订阅您的服务端的客户端。 它将保存从客户端ID到服务端流的映射，您将很快看到它的创建和用途。</li>
@@ -540,79 +554,202 @@
 </li>
 </ul>
 <h3 id="服务端订阅方法"><a href="#服务端订阅方法" class="headerlink" title="服务端订阅方法"></a>服务端订阅方法</h3><p>​    为了实现在proto文件中定义的gRPC服务端接口，您需要实现以下方法：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *longlivedServer)</span> <span class="title">Subscribe</span><span class="params">(request *protos.Request, stream protos.Longlived_SubscribeServer)</span> <span class="title">error</span></span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">func (s *longlivedServer) Subscribe(request *protos.Request, stream protos.Longlived_SubscribeServer) error
+</code></pre>
 <p>​    此方法对来自客户端的每个传入订阅请求具有单独的上下文（专用<code>goroutine</code>）。 您将收到客户端请求和相应的流，该流用于将数据流传输到客户端。</p>
 <p>​    关于此函数的重要说明是，<strong>一旦此函数返回，流将关闭</strong>。 只要订阅了客户端，此功能范围就必须保持活动状态。</p>
 <h3 id="订阅客户端"><a href="#订阅客户端" class="headerlink" title="订阅客户端"></a>订阅客户端</h3><p>​    由于只要在单独的<code>goroutine</code>中订阅了客户端，此功能就会运行，因此您需要一种访问其流的方法，以便将数据发送到订阅的客户端。</p>
 <p>​    您还需要一种方法来通知此<code>goroutine</code>在流关闭的情况下退出。</p>
 <p>​    这就是为什么我们需要为每个客户流创建一个专用<code>channel</code>（<code>fin</code> channel）的原因。 我选择实现此机制的方法是将客户端ID映射到其对应的通道和流：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fin := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">bool</span>)</span><br><span class="line"><span class="comment">// Save the subscriber stream according to the given client ID</span></span><br><span class="line">s.subscribers.Store(request.Id, sub&#123;stream: stream, finished: fin&#125;)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">fin := make(chan bool)
+// Save the subscriber stream according to the given client ID
+s.subscribers.Store(request.Id, sub&#123;stream: stream, finished: fin&#125;)
+</code></pre>
 <p>​    而且，如上所述，需要保护对此映射的写入（或从中读取），这就是为什么我使用了并发映射。</p>
 <p>​    您要做的最后一件事是等待<code>channel</code>上2个可能的事件之一：</p>
 <pre><code>1. 发生错误时，您将发送一条消息通知该通道，请关闭该通道（您将在下面使用此通道的另一侧）。
 2. 发送给`ctx.Done`的消息–这是客户端断开连接的通信方式。
 </code></pre>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> &#123;</span><br><span class="line">   <span class="keyword">select</span> &#123;</span><br><span class="line">   <span class="keyword">case</span> &lt;-fin:</span><br><span class="line">      log.Printf(<span class="string">&quot;Closing stream for client ID: %d&quot;</span>, request.Id)</span><br><span class="line">   <span class="keyword">case</span> &lt;- ctx.Done():</span><br><span class="line">      log.Printf(<span class="string">&quot;Client ID %d has disconnected&quot;</span>, request.Id)</span><br><span class="line">      <span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">for &#123;
+   select &#123;
+   case &lt;-fin:
+      log.Printf(&quot;Closing stream for client ID: %d&quot;, request.Id)
+   case &lt;- ctx.Done():
+      log.Printf(&quot;Client ID %d has disconnected&quot;, request.Id)
+      return nil
+   &#125;
+&#125;
+</code></pre>
 <h3 id="创建客户端"><a href="#创建客户端" class="headerlink" title="创建客户端"></a>创建客户端</h3><p>​    在此处查看完整的客户端代码：<a target="_blank" rel="noopener" href="https://github.com/omri86/longlived-grpc/blob/master/client/client.go">client.go</a></p>
 <p>​    首先让我们来看一下客户端结构体：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> longlivedClient <span class="keyword">struct</span> &#123;</span><br><span class="line">   client protos.LonglivedClient <span class="comment">// client is the long lived gRPC client</span></span><br><span class="line">   conn   *grpc.ClientConn       <span class="comment">// conn is the client gRPC connection</span></span><br><span class="line">   id     <span class="keyword">int32</span>                  <span class="comment">// id is the client ID used for subscribing</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">type longlivedClient struct &#123;
+   client protos.LonglivedClient // client is the long lived gRPC client
+   conn   *grpc.ClientConn       // conn is the client gRPC connection
+   id     int32                  // id is the client ID used for subscribing
+&#125;
+</code></pre>
 <ul>
 <li><code>client</code>代表gRPC客户端，我们将很快对其进行初始化。</li>
 <li><code>conn</code>将保持gRPC连接（客户端&lt;-&gt;服务器）</li>
 <li>如服务器端所述，客户端正在订阅其唯一ID。 id字段是保存此ID的字段。</li>
 </ul>
 <h3 id="客户端订阅方法"><a href="#客户端订阅方法" class="headerlink" title="客户端订阅方法"></a>客户端订阅方法</h3><p>​    为了订阅服务端更新，客户端必须调用gRPC <code>Subscribe()</code>函数。 这样做如下：</p>
- <figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c.client.Subscribe(context.Background(), &amp;protos.Request&#123;Id: c.id&#125;)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">c.client.Subscribe(context.Background(), &amp;protos.Request&#123;Id: c.id&#125;)
+</code></pre>
 <ul>
 <li>可以将上下文设置为包含截止日期，取消信号等。 由于这不在本博客文章的讨论范围之内，因此您可以在<a target="_blank" rel="noopener" href="https://golang.org/pkg/context/">此处</a>了解更多信息。</li>
 <li>传递给服务器的第二个值是保存客户端<code>id</code>的客户端请求。</li>
 </ul>
 <h3 id="开启客户端"><a href="#开启客户端" class="headerlink" title="开启客户端"></a>开启客户端</h3><p>​    订阅后，该流用于将数据从服务器流式传输到客户端：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> stream protos.Longlived_SubscribeClient</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">var stream protos.Longlived_SubscribeClient
+</code></pre>
 <p>​    客户端应该做的第一件事是按照上一节中的说明进行订阅：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> stream == <span class="literal">nil</span> &#123;</span><br><span class="line">   <span class="keyword">if</span> stream, err = c.subscribe(); err != <span class="literal">nil</span> &#123;</span><br><span class="line">      log.Printf(<span class="string">&quot;Failed to subscribe: %v&quot;</span>, err)</span><br><span class="line">      c.sleep()</span><br><span class="line">      <span class="comment">// Retry on failure</span></span><br><span class="line">      <span class="keyword">continue</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">if stream == nil &#123;
+   if stream, err = c.subscribe(); err != nil &#123;
+      log.Printf(&quot;Failed to subscribe: %v&quot;, err)
+      c.sleep()
+      // Retry on failure
+      continue
+   &#125;
+&#125;
+</code></pre>
 <p>​    如您所见，如果发生错误，我们只<code>sleep</code>几秒钟，然后尝试重新订阅。 这样做是为了确保客户端可以应对服务端器崩溃。 您需要确保客户端在服务器无响应的情况下继续重试连接。 稍后您将看到它如何工作。</p>
 <p>​    客户端的下一部分和最后一部分是从流中接收数据：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">response, err := stream.Recv()</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">   log.Printf(<span class="string">&quot;Failed to receive message: %v&quot;</span>, err)</span><br><span class="line">   <span class="comment">// Clearing the stream will force the client to resubscribe on next iteration</span></span><br><span class="line">   stream = <span class="literal">nil</span></span><br><span class="line">   c.sleep()</span><br><span class="line">   <span class="comment">// Retry on failure</span></span><br><span class="line">   <span class="keyword">continue</span></span><br><span class="line">&#125;</span><br><span class="line">log.Printf(<span class="string">&quot;Client ID %d got response: %q&quot;</span>, c.id, response.Data)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">response, err := stream.Recv()
+if err != nil &#123;
+   log.Printf(&quot;Failed to receive message: %v&quot;, err)
+   // Clearing the stream will force the client to resubscribe on next iteration
+   stream = nil
+   c.sleep()
+   // Retry on failure
+   continue
+&#125;
+log.Printf(&quot;Client ID %d got response: %q&quot;, c.id, response.Data)
+</code></pre>
 <h3 id="创建实际的应用程序"><a href="#创建实际的应用程序" class="headerlink" title="创建实际的应用程序"></a>创建实际的应用程序</h3><p>​    现在基础已经明确，让我们运行我们的应用程序并查看其实际工作方式。</p>
 <h3 id="服务端的主要方法"><a href="#服务端的主要方法" class="headerlink" title="服务端的主要方法"></a>服务端的主要方法</h3><p>​    您需要做的第一件事是初始化服务端：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">lis, err := net.Listen(<span class="string">&quot;tcp&quot;</span>, <span class="string">&quot;127.0.0.1:7070&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">   log.Fatalf(<span class="string">&quot;failed to listen: %v&quot;</span>, err)</span><br><span class="line">grpcServer := grpc.NewServer([]grpc.ServerOption&#123;&#125;...)</span><br><span class="line"></span><br><span class="line">server := &amp;longlivedServer&#123;&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="go">lis, err := net.Listen(&quot;tcp&quot;, &quot;127.0.0.1:7070&quot;)
+if err != nil &#123;
+   log.Fatalf(&quot;failed to listen: %v&quot;, err)
+grpcServer := grpc.NewServer([]grpc.ServerOption&#123;&#125;...)
 
+server := &amp;longlivedServer&#123;&#125;
+</code></pre>
 <p>​    下一步是运行后台任务（goroutine）以生成数据并将其发送到订阅客户端：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Start sending data to subscribers</span></span><br><span class="line"><span class="keyword">go</span> server.mockDataGenerator()</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">// Start sending data to subscribers
+go server.mockDataGenerator()
+</code></pre>
 <p>​    此函数遍历订阅的客户端，并在其相应的流上发送数据：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="params">(s *longlivedServer)</span> <span class="title">mockDataGenerator</span><span class="params">()</span></span> &#123;</span><br><span class="line">   log.Println(<span class="string">&quot;Starting data generation&quot;</span>)</span><br><span class="line">   <span class="keyword">for</span> &#123;</span><br><span class="line">      time.Sleep(time.Second)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// A list of clients to unsubscribe in case of error</span></span><br><span class="line">      <span class="keyword">var</span> unsubscribe []<span class="keyword">int32</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// Iterate over all subscribers and send data to each client</span></span><br><span class="line">      s.subscribers.Range(<span class="function"><span class="keyword">func</span><span class="params">(k, v <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">bool</span></span> &#123;</span><br><span class="line">         id, ok := k.(<span class="keyword">int32</span>)</span><br><span class="line">         <span class="keyword">if</span> !ok &#123;</span><br><span class="line">            log.Printf(<span class="string">&quot;Failed to cast subscriber key: %T&quot;</span>, k)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">         &#125;</span><br><span class="line">         sub, ok := v.(sub)</span><br><span class="line">         <span class="keyword">if</span> !ok &#123;</span><br><span class="line">            log.Printf(<span class="string">&quot;Failed to cast subscriber value: %T&quot;</span>, v)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">         &#125;</span><br><span class="line">         <span class="comment">// Send data over the gRPC stream to the client</span></span><br><span class="line">         <span class="keyword">if</span> err := sub.stream.Send(&amp;protos.Response&#123;Data: fmt.Sprintf(<span class="string">&quot;data mock for: %d&quot;</span>, id)&#125;); err != <span class="literal">nil</span> &#123;</span><br><span class="line">            log.Printf(<span class="string">&quot;Failed to send data to client: %v&quot;</span>, err)</span><br><span class="line">            <span class="keyword">select</span> &#123;</span><br><span class="line">            <span class="keyword">case</span> sub.finished &lt;- <span class="literal">true</span>:</span><br><span class="line">               log.Printf(<span class="string">&quot;Unsubscribed client: %d&quot;</span>, id)</span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">               <span class="comment">// Default case is to avoid blocking in case client has already unsubscribed</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// In case of error the client would re-subscribe so close the subscriber stream</span></span><br><span class="line">            unsubscribe = <span class="built_in">append</span>(unsubscribe, id)</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">      &#125;)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Unsubscribe erroneous client streams</span></span><br><span class="line">      <span class="keyword">for</span> _, id := <span class="keyword">range</span> unsubscribe &#123;</span><br><span class="line">         s.subscribers.Delete(id)</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="go">func (s *longlivedServer) mockDataGenerator() &#123;
+   log.Println(&quot;Starting data generation&quot;)
+   for &#123;
+      time.Sleep(time.Second)
 
+      // A list of clients to unsubscribe in case of error
+      var unsubscribe []int32
+
+      // Iterate over all subscribers and send data to each client
+      s.subscribers.Range(func(k, v interface&#123;&#125;) bool &#123;
+         id, ok := k.(int32)
+         if !ok &#123;
+            log.Printf(&quot;Failed to cast subscriber key: %T&quot;, k)
+            return false
+         &#125;
+         sub, ok := v.(sub)
+         if !ok &#123;
+            log.Printf(&quot;Failed to cast subscriber value: %T&quot;, v)
+            return false
+         &#125;
+         // Send data over the gRPC stream to the client
+         if err := sub.stream.Send(&amp;protos.Response&#123;Data: fmt.Sprintf(&quot;data mock for: %d&quot;, id)&#125;); err != nil &#123;
+            log.Printf(&quot;Failed to send data to client: %v&quot;, err)
+            select &#123;
+            case sub.finished &lt;- true:
+               log.Printf(&quot;Unsubscribed client: %d&quot;, id)
+            default:
+               // Default case is to avoid blocking in case client has already unsubscribed
+            &#125;
+            // In case of error the client would re-subscribe so close the subscriber stream
+            unsubscribe = append(unsubscribe, id)
+         &#125;
+         return true
+      &#125;)
+
+      // Unsubscribe erroneous client streams
+      for _, id := range unsubscribe &#123;
+         s.subscribers.Delete(id)
+      &#125;
+   &#125;
+&#125;
+</code></pre>
 <p>​    剩下的就是注册并启动服务端：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Register the server</span></span><br><span class="line">protos.RegisterLonglivedServer(grpcServer, server)</span><br><span class="line"></span><br><span class="line">log.Printf(<span class="string">&quot;Starting server on address %s&quot;</span>, lis.Addr().String())</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start listening</span></span><br><span class="line"><span class="keyword">if</span> err := grpcServer.Serve(lis); err != <span class="literal">nil</span> &#123;</span><br><span class="line">   log.Fatalf(<span class="string">&quot;failed to listen: %v&quot;</span>, err)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="go">// Register the server
+protos.RegisterLonglivedServer(grpcServer, server)
 
+log.Printf(&quot;Starting server on address %s&quot;, lis.Addr().String())
+
+// Start listening
+if err := grpcServer.Serve(lis); err != nil &#123;
+   log.Fatalf(&quot;failed to listen: %v&quot;, err)
+&#125;
+</code></pre>
 <p>​    您可以立即启动服务端：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> build server.<span class="keyword">go</span></span><br><span class="line">$ ./server</span><br><span class="line"><span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">08</span>:<span class="number">48</span>:<span class="number">09</span> Starting server on address <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">7070</span></span><br><span class="line"><span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">08</span>:<span class="number">48</span>:<span class="number">09</span> Starting data generation</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">$ go build server.go
+$ ./server
+2021/03/04 08:48:09 Starting server on address 127.0.0.1:7070
+2021/03/04 08:48:09 Starting data generation
+</code></pre>
 <h3 id="客户端的主要方法"><a href="#客户端的主要方法" class="headerlink" title="客户端的主要方法"></a>客户端的主要方法</h3><p>​    对于客户端，您将在同一过程中模拟多个客户端。 这可以轻松地单独完成：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">   <span class="comment">// Create multiple clients and start receiving data</span></span><br><span class="line">   <span class="keyword">var</span> wg sync.WaitGroup</span><br><span class="line"></span><br><span class="line">   <span class="keyword">for</span> i := <span class="number">1</span>; i &lt;= <span class="number">10</span>; i++ &#123;</span><br><span class="line">      wg.Add(<span class="number">1</span>)</span><br><span class="line">      client, err := mkLonglivedClient(<span class="keyword">int32</span>(i))</span><br><span class="line">      <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">         log.Fatal(err)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">go</span> client.start()</span><br><span class="line">      time.Sleep(time.Second*<span class="number">2</span>)</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// The wait group purpose is to avoid exiting, the clients do not exit</span></span><br><span class="line">   wg.Wait()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="go">func main() &#123;
+   // Create multiple clients and start receiving data
+   var wg sync.WaitGroup
 
+   for i := 1; i &lt;= 10; i++ &#123;
+      wg.Add(1)
+      client, err := mkLonglivedClient(int32(i))
+      if err != nil &#123;
+         log.Fatal(err)
+      &#125;
+      go client.start()
+      time.Sleep(time.Second*2)
+   &#125;
+
+   // The wait group purpose is to avoid exiting, the clients do not exit
+   wg.Wait()
+&#125;
+</code></pre>
 <p>​    服务器已经启动并且正在运行，因此让我们运行客户端：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">go</span> build client.<span class="keyword">go</span></span><br><span class="line">$ ./client</span><br><span class="line"><span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">29</span> Subscribing client ID: <span class="number">1</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">29</span> Client ID <span class="number">1</span> got response: <span class="string">&quot;data mock for: 1&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">30</span> Client ID <span class="number">1</span> got response: <span class="string">&quot;data mock for: 1&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">31</span> Subscribing client ID: <span class="number">2</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">31</span> Client ID <span class="number">1</span> got response: <span class="string">&quot;data mock for: 1&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">31</span> Client ID <span class="number">2</span> got response: <span class="string">&quot;data mock for: 2&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">32</span> Client ID <span class="number">1</span> got response: <span class="string">&quot;data mock for: 1&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">32</span> Client ID <span class="number">2</span> got response: <span class="string">&quot;data mock for: 2&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">33</span> Subscribing client ID: <span class="number">3</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">33</span> Client ID <span class="number">2</span> got response: <span class="string">&quot;data mock for: 2&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">33</span> Client ID <span class="number">1</span> got response: <span class="string">&quot;data mock for: 1&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">33</span> Client ID <span class="number">3</span> got response: <span class="string">&quot;data mock for: 3&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">34</span> Client ID <span class="number">1</span> got response: <span class="string">&quot;data mock for: 1&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">34</span> Client ID <span class="number">3</span> got response: <span class="string">&quot;data mock for: 3&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">34</span> Client ID <span class="number">2</span> got response: <span class="string">&quot;data mock for: 2&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">35</span> Subscribing client ID: <span class="number">4</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">35</span> Client ID <span class="number">2</span> got response: <span class="string">&quot;data mock for: 2&quot;</span></span><br><span class="line"> <span class="number">2021</span>/<span class="number">03</span>/<span class="number">04</span> <span class="number">09</span>:<span class="number">19</span>:<span class="number">35</span> Client ID <span class="number">4</span> got response: <span class="string">&quot;data mock for: 4&quot;</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">$ go build client.go
+$ ./client
+2021/03/04 09:19:29 Subscribing client ID: 1
+ 2021/03/04 09:19:29 Client ID 1 got response: &quot;data mock for: 1&quot;
+ 2021/03/04 09:19:30 Client ID 1 got response: &quot;data mock for: 1&quot;
+ 2021/03/04 09:19:31 Subscribing client ID: 2
+ 2021/03/04 09:19:31 Client ID 1 got response: &quot;data mock for: 1&quot;
+ 2021/03/04 09:19:31 Client ID 2 got response: &quot;data mock for: 2&quot;
+ 2021/03/04 09:19:32 Client ID 1 got response: &quot;data mock for: 1&quot;
+ 2021/03/04 09:19:32 Client ID 2 got response: &quot;data mock for: 2&quot;
+ 2021/03/04 09:19:33 Subscribing client ID: 3
+ 2021/03/04 09:19:33 Client ID 2 got response: &quot;data mock for: 2&quot;
+ 2021/03/04 09:19:33 Client ID 1 got response: &quot;data mock for: 1&quot;
+ 2021/03/04 09:19:33 Client ID 3 got response: &quot;data mock for: 3&quot;
+ 2021/03/04 09:19:34 Client ID 1 got response: &quot;data mock for: 1&quot;
+ 2021/03/04 09:19:34 Client ID 3 got response: &quot;data mock for: 3&quot;
+ 2021/03/04 09:19:34 Client ID 2 got response: &quot;data mock for: 2&quot;
+ 2021/03/04 09:19:35 Subscribing client ID: 4
+ 2021/03/04 09:19:35 Client ID 2 got response: &quot;data mock for: 2&quot;
+ 2021/03/04 09:19:35 Client ID 4 got response: &quot;data mock for: 4&quot;
+</code></pre>
 <p>​    如您所见，客户端正在启动，正在按预期方式订阅和接收数据。</p>
 <h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>​    客户端和服务器都可以通过简单地重试连接来处理另一端的错误。</p>
 <p>​    让我们通过停止服务器并查看客户端日志来进行测试：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2021</span>/<span class="number">03</span>/<span class="number">07</span> <span class="number">19</span>:<span class="number">38</span>:<span class="number">43</span> Failed to receive message: rpc error: code = Unavailable desc = transport is closing</span><br><span class="line"><span class="number">2021</span>/<span class="number">03</span>/<span class="number">07</span> <span class="number">19</span>:<span class="number">38</span>:<span class="number">48</span> Failed to subscribe: rpc error: code = Unavailable desc = connection error: desc = <span class="string">&quot;transport: Error while dialing dial tcp 127.0.0.1:7070: connect: connection refused&quot;</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">2021/03/07 19:38:43 Failed to receive message: rpc error: code = Unavailable desc = transport is closing
+2021/03/07 19:38:48 Failed to subscribe: rpc error: code = Unavailable desc = connection error: desc = &quot;transport: Error while dialing dial tcp 127.0.0.1:7070: connect: connection refused&quot;
+</code></pre>
 <p>​    如您所见，由于传输流正在关闭，每个客户端都会首先收到RPC错误。 由于服务器未响应，因此导致错误未能订阅–因此发生了传输错误：<code>connect：连接被拒绝</code>。</p>
 <p>​    现在，再次启动服务器，并停止客户端–让我们查看服务器日志：</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2021</span>/<span class="number">03</span>/<span class="number">07</span> <span class="number">19</span>:<span class="number">43</span>:<span class="number">04</span> Failed to send data to client: rpc error: code = Unavailable desc = transport is closing</span><br></pre></td></tr></table></figure>
-
+<pre><code class="go">2021/03/07 19:43:04 Failed to send data to client: rpc error: code = Unavailable desc = transport is closing
+</code></pre>
 <p>​    与客户端相同的错误，但是由于我们删除了已订阅的客户端并重试，因此不会收到其他任何错误。</p>
 <p>​    再次启动客户端将重新订阅客户端，并且您可以看到客户端和服务端都按预期工作。</p>
 <h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>​    起初，对于长期流使用gRPC可能会有些令人生畏，但是从本示例中可以看出–不必一定如此！</p>
@@ -644,7 +781,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wangyufenggogogo.github.io/2021/05/09/trans/2021-05-09-grpc-long-lived-streaming-trans/">http://wangyufenggogogo.github.io/2021/05/09/trans/2021-05-09-grpc-long-lived-streaming-trans/</a>
+                    <a href="http://wangyufenggogogo.github.io/2021/05/09/trans/grpc-long-lived-streaming-trans/">http://wangyufenggogogo.github.io/2021/05/09/trans/grpc-long-lived-streaming-trans/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -686,12 +823,12 @@
                                     <span class="chip bg-color">Golang</span>
                                 </a>
                             
-                                <a href="/tags/gRPC/">
-                                    <span class="chip bg-color">gRPC</span>
-                                </a>
-                            
                                 <a href="/tags/%E8%AF%91%E6%96%87/">
                                     <span class="chip bg-color">译文</span>
+                                </a>
+                            
+                                <a href="/tags/gRPC/">
+                                    <span class="chip bg-color">gRPC</span>
                                 </a>
                             
                         </div>
@@ -867,7 +1004,7 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/08/09/trans/2021-08-02-tcmalloc-thread-caching-malloc/">
+                <a href="/2021/08/09/trans/tcmalloc-thread-caching-malloc/">
                     <div class="card-image">
                         
                         
@@ -901,16 +1038,16 @@
                         <span class="chip bg-color">Golang</span>
                     </a>
                     
-                    <a href="/tags/%E8%AF%91%E6%96%87/">
-                        <span class="chip bg-color">译文</span>
-                    </a>
-                    
                     <a href="/tags/TCMalloc/">
                         <span class="chip bg-color">TCMalloc</span>
                     </a>
                     
                     <a href="/tags/GC/">
                         <span class="chip bg-color">GC</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%AF%91%E6%96%87/">
+                        <span class="chip bg-color">译文</span>
                     </a>
                     
                 </div>
@@ -924,7 +1061,7 @@
                 本篇&nbsp;<i class="far fa-dot-circle"></i>
             </div>
             <div class="card">
-                <a href="/2021/05/09/trans/2021-05-09-grpc-long-lived-streaming-trans/">
+                <a href="/2021/05/09/trans/grpc-long-lived-streaming-trans/">
                     <div class="card-image">
                         
                         
@@ -959,12 +1096,12 @@
                         <span class="chip bg-color">Golang</span>
                     </a>
                     
-                    <a href="/tags/gRPC/">
-                        <span class="chip bg-color">gRPC</span>
-                    </a>
-                    
                     <a href="/tags/%E8%AF%91%E6%96%87/">
                         <span class="chip bg-color">译文</span>
+                    </a>
+                    
+                    <a href="/tags/gRPC/">
+                        <span class="chip bg-color">gRPC</span>
                     </a>
                     
                 </div>
