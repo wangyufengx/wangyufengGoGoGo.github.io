@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="分类, PEAKBRO">
+    <meta name="keywords" content="标签: 加密解密算法, PEAKBRO">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>分类 | PEAKBRO</title>
+    <title>标签: 加密解密算法 | PEAKBRO</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -331,91 +331,142 @@
 
     
 
-<div id="category-cloud" class="container chip-container">
+<div id="tags" class="container chip-container">
     <div class="card">
         <div class="card-content">
             <div class="tag-title center-align">
-                <i class="fas fa-bookmark"></i>&nbsp;&nbsp;文章分类
+                <i class="fas fa-tags"></i>&nbsp;&nbsp;文章标签
             </div>
             <div class="tag-chips">
                 
                 
-                
-                <a href="/categories/golang/" title="golang: 5">
+                <a href="/tags/rsa/" title="rsa: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F9EBEA;">golang
+                            data-tagname="rsa" style="background-color: #F9EBEA;">rsa
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/Golang/" title="Golang: 5">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="Golang" style="background-color: #F5EEF8;">Golang
                         <span class="tag-length">5</span>
                     </span>
                 </a>
                 
+                
+                <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E7%AE%97%E6%B3%95/" title="加密解密算法: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-active "
+                            data-tagname="加密解密算法" style="background-color: #D5F5E3;">加密解密算法
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/Ticker/" title="Ticker: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="Ticker" style="background-color: #E8F8F5;">Ticker
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/base32/" title="base32: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="base32" style="background-color: #FEF9E7;">base32
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/TCMalloc/" title="TCMalloc: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="TCMalloc" style="background-color: #F8F9F9;">TCMalloc
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/GC/" title="GC: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="GC" style="background-color: #82E0AA;">GC
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/%E8%AF%91%E6%96%87/" title="译文: 2">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="译文" style="background-color: #D7BDE2;">译文
+                        <span class="tag-length">2</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/gRPC/" title="gRPC: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="gRPC" style="background-color: #A3E4D7;">gRPC
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
                 
             </div>
         </div>
     </div>
 </div>
 
-
-    
-    <style type="text/css">
-    #category-radar {
-        width: 100%;
-        height: 360px;
-    }
-</style>
-
-<div class="container" data-aos="fade-up">
-    <div class="card">
-        <div id="category-radar" class="card-content"></div>
-    </div>
-</div>
-
-<script type="text/javascript" src="/libs/echarts/echarts.min.js"></script>
-<script type="text/javascript">
-    let radarChart = echarts.init(document.getElementById('category-radar'));
-
     
 
-    let option = {
-        title: {
-            left: 'center',
-            text: '文章分类雷达图',
-            textStyle: {
-                fontWeight: 500,
-                fontSize: 22
-            }
-        },
-        tooltip: {},
-        radar: {
-            name: {
-                textStyle: {
-                    color: '#3C4858'
-                }
-            },
-            indicator: [{"name":"golang","max":10}],
-            nameGap: 5,
-            center: ['50%','55%'],
-            radius: '66%'
-        },
-        series: [{
-            type: 'radar',
-            color: ['#3ecf8e'],
-            itemStyle: {normal: {areaStyle: {type: 'default'}}},
-            data : [
-                {
-                    value : [5],
-                    name : '文章分类数量'
-                }
-            ]
-        }]
-    };
-
-    radarChart.setOption(option);
-</script>
-
-    
-
+    <article id="articles" class="container articles">
+        <div class="row tags-posts">
+            
+            
+            <div class="article tag-post col s12 m6 l4" data-tags="rsa, Golang, 加密解密算法" data-aos="fade-up">
+                <div class="card">
+                    <a href="/2021/09/03/notes/rsa-jia-mi-jie-mi/">
+                        <div class="card-image tag-image">
+                            
+                            
+                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="RSA加密解密">
+                            
+                            <span class="card-title">RSA加密解密</span>
+                        </div>
+                    </a>
+                    <div class="card-content article-content">
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-03
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fas fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/golang/" class="post-category">
+                                golang
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </article>
 </main>
+
+
 
 
     <footer class="page-footer bg-color">

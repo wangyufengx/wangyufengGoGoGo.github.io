@@ -477,6 +477,9 @@
         <hr class="clearfix">
 
         
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
 
         
 
@@ -506,15 +509,15 @@
 <p>​    TCMalloc 的另一个好处是小对象的空间高效表示。例如，可以分配 N 个 8 字节的对象总共需要 <code>8N*1.01</code>字节的空间。 即，百分之一的空间开销。ptmalloc2 为每个对象使用一个四字节的标头，并且（我认为）将大小四舍五入为 8 字节的倍数，最终使用<code>16N</code>字节。</p>
 <h2 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h2><h3 id="原文-1"><a href="#原文-1" class="headerlink" title="原文"></a>原文</h3><p>​    To use TCmalloc, just link tcmalloc into your application via the “-ltcmalloc” linker flag.</p>
 <p>​    You can use tcmalloc in applications you didn’t compile yourself, by using LD_PRELOAD:</p>
-<pre><code>   $ LD_PRELOAD=&quot;/usr/lib/libtcmalloc.so&quot; 
-</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">$ LD_PRELOAD&#x3D;&quot;&#x2F;usr&#x2F;lib&#x2F;libtcmalloc.so&quot; <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>​    LD_PRELOAD is tricky, and we don’t necessarily recommend this mode of usage.</p>
 <p>​    TCMalloc includes a <a target="_blank" rel="noopener" href="http://goog-perftools.sourceforge.net/doc/heap_checker.html">heap checker</a> and <a target="_blank" rel="noopener" href="http://goog-perftools.sourceforge.net/doc/heap_profiler.html">heap profiler</a> as well.</p>
 <p>​    If you’d rather link in a version of TCMalloc that does not include the heap profiler and checker (perhaps to reduce binary size for a static binary), you can link in <code>libtcmalloc_minimal</code> instead.</p>
 <h3 id="译-1"><a href="#译-1" class="headerlink" title="译"></a>译</h3><p>​    要使用 TCmalloc，只需通过“-ltcmalloc”链接器标志将 tcmalloc 链接到您的应用程序。</p>
 <p>​    您可以在不是自己编译的应用程序中使用 tcmalloc，方法是使用 LD_PRELOAD：</p>
-<pre><code>   $ LD_PRELOAD=&quot;/usr/lib/libtcmalloc.so&quot; 
-</code></pre>
+<pre class="line-numbers language-none"><code class="language-none">$ LD_PRELOAD&#x3D;&quot;&#x2F;usr&#x2F;lib&#x2F;libtcmalloc.so&quot; <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
 <p>​    LD_PRELOAD 很棘手，我们不一定推荐这种使用模式。</p>
 <p>​    TCMalloc 还包括一个堆检查器和堆分析器。</p>
 <p>​    如果您更愿意链接不包含堆分析器和检查器的 TCMalloc 版本（可能是为了减少静态二进制文件的二进制大小），您可以使用链接<code>libtcmalloc_minimal</code>代替。</p>
@@ -1174,7 +1177,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">10.1k</span>
+                        class="white-color">11k</span>
             
             
             

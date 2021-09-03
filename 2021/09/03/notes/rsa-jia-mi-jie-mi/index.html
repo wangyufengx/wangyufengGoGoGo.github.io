@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="base32编码解码, PEAKBRO">
+    <meta name="keywords" content="RSA加密解密, PEAKBRO">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>base32编码解码 | PEAKBRO</title>
+    <title>RSA加密解密 | PEAKBRO</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -293,7 +293,7 @@
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">base32编码解码</h1>
+                    <h1 class="description center-align post-title">RSA加密解密</h1>
                 </div>
             </div>
         </div>
@@ -409,12 +409,16 @@
                     
                     <div class="article-tag">
                         
+                            <a href="/tags/rsa/">
+                                <span class="chip bg-color">rsa</span>
+                            </a>
+                        
                             <a href="/tags/Golang/">
                                 <span class="chip bg-color">Golang</span>
                             </a>
                         
-                            <a href="/tags/base32/">
-                                <span class="chip bg-color">base32</span>
+                            <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E7%AE%97%E6%B3%95/">
+                                <span class="chip bg-color">加密解密算法</span>
                             </a>
                         
                     </div>
@@ -438,28 +442,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-14
+                    2021-09-03
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-29
+                    2021-09-03
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    243
+                    986
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    5 分
                 </div>
                 
 
@@ -477,60 +481,217 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h3><ul>
-<li>StdPadding：使用<code>rune</code>类型的<code>=</code>作为标准填充字符。</li>
-<li>NoPadding：-1 无填充。</li>
+                <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>RSA公开密钥密码体制是一种使用不同的加密密钥与解密密钥，“由已知加密密钥推导出解密密钥在计算上是不可行的”密码体制。</li>
+<li>RSA是被研究得最广泛的公钥算法，从提出到现在已近三十年，经历了各种攻击的考验，逐渐为人们接受，普遍认为是目前最优秀的公钥方案之一。</li>
 </ul>
-<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><p>RFC 4648定义的标准base32编码。</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">var</span> StdEncoding <span class="token operator">=</span> <span class="token function">NewEncoding</span><span class="token punctuation">(</span>encodeStd<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h3 id="算法原理"><a href="#算法原理" class="headerlink" title="算法原理"></a>算法原理</h3><p>​    RSA公开密钥密码体制的原理是：根据数论，寻求两个大素数比较简单，而将它们的乘积进行因式分解却极其困难，因此可以将乘积公开作为加密密钥。</p>
+<h3 id="算法描述"><a href="#算法描述" class="headerlink" title="算法描述"></a>算法描述</h3><p><img src="/img/notes/rsa.png"></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><h3 id="生成公钥私钥"><a href="#生成公钥私钥" class="headerlink" title="生成公钥私钥"></a>生成公钥私钥</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//GenRsaKEY 生成公钥私钥</span>
+<span class="token keyword">func</span> <span class="token function">GenRsaKEY</span><span class="token punctuation">(</span>bits <span class="token builtin">int</span><span class="token punctuation">)</span> <span class="token builtin">error</span> <span class="token punctuation">&#123;</span>
+	<span class="token comment">//生成私钥</span>
+	privateKey<span class="token punctuation">,</span> err <span class="token operator">:=</span> rsa<span class="token punctuation">.</span><span class="token function">GenerateKey</span><span class="token punctuation">(</span>rand<span class="token punctuation">.</span>Reader<span class="token punctuation">,</span> bits<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> err
+	<span class="token punctuation">&#125;</span>
+	derStream <span class="token operator">:=</span> x509<span class="token punctuation">.</span><span class="token function">MarshalPKCS1PrivateKey</span><span class="token punctuation">(</span>privateKey<span class="token punctuation">)</span>
+	block <span class="token operator">:=</span> <span class="token operator">&amp;</span>pem<span class="token punctuation">.</span>Block<span class="token punctuation">&#123;</span>
+		Type<span class="token punctuation">:</span>  <span class="token string">"RSA PRIVATE KEY"</span><span class="token punctuation">,</span>
+		Bytes<span class="token punctuation">:</span> derStream<span class="token punctuation">,</span>
+	<span class="token punctuation">&#125;</span>
+	file<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">Create</span><span class="token punctuation">(</span><span class="token string">"private.pem"</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> err
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">if</span> err <span class="token operator">=</span> pem<span class="token punctuation">.</span><span class="token function">Encode</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> block<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> err
+	<span class="token punctuation">&#125;</span>
 
-<p>RFC 4648定义的`Extended Hex Alphabet’一般用于DNS</p>
-<pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">var</span> HexEncoding <span class="token operator">=</span> <span class="token function">NewEncoding</span><span class="token punctuation">(</span>encodeHex<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+	publicKey <span class="token operator">:=</span> <span class="token operator">&amp;</span>privateKey<span class="token punctuation">.</span>PublicKey
+	derPkix<span class="token punctuation">,</span> err <span class="token operator">:=</span> x509<span class="token punctuation">.</span><span class="token function">MarshalPKIXPublicKey</span><span class="token punctuation">(</span>publicKey<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> err
+	<span class="token punctuation">&#125;</span>
+	block <span class="token operator">=</span> <span class="token operator">&amp;</span>pem<span class="token punctuation">.</span>Block<span class="token punctuation">&#123;</span>
+		Type<span class="token punctuation">:</span>  <span class="token string">"PUBLIC KEY"</span><span class="token punctuation">,</span>
+		Bytes<span class="token punctuation">:</span> derPkix<span class="token punctuation">,</span>
+	<span class="token punctuation">&#125;</span>
+	file<span class="token punctuation">,</span> err <span class="token operator">=</span> os<span class="token punctuation">.</span><span class="token function">Create</span><span class="token punctuation">(</span><span class="token string">"public.pem"</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> err
+	<span class="token punctuation">&#125;</span>
+	err <span class="token operator">=</span> pem<span class="token punctuation">.</span><span class="token function">Encode</span><span class="token punctuation">(</span>file<span class="token punctuation">,</span> block<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> err
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> <span class="token boolean">nil</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><ul>
-<li><p>NewEncoding(encoder string) *Encoding</p>
-</li>
-<li><p>NewEncoder(enc *Encoding, w io.Writer) io.WriteCloser</p>
-</li>
-<li><p>NewDecoder(enc *Encoding, r io.Reader) io.Reader</p>
-</li>
+<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><h4 id="从字符串中读取公钥私钥"><a href="#从字符串中读取公钥私钥" class="headerlink" title="从字符串中读取公钥私钥"></a>从字符串中读取公钥私钥</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">var</span> publicKey <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span><span class="token string">`公钥（此处省略）`</span><span class="token punctuation">)</span>
+<span class="token keyword">var</span> privateKey <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span><span class="token string">`私钥（此处省略）`</span><span class="token punctuation">)</span>
+<span class="token comment">//RsaEncryptByString 加密</span>
+<span class="token keyword">func</span> <span class="token function">RsaEncryptByString</span><span class="token punctuation">(</span>publicKey<span class="token punctuation">,</span> data <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	<span class="token keyword">var</span> <span class="token punctuation">(</span>
+		block        <span class="token operator">*</span>pem<span class="token punctuation">.</span>Block
+		pubInterface <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+		err          <span class="token builtin">error</span>
+		pub          <span class="token operator">*</span>rsa<span class="token punctuation">.</span>PublicKey
+	<span class="token punctuation">)</span>
+	block<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">=</span> pem<span class="token punctuation">.</span><span class="token function">Decode</span><span class="token punctuation">(</span>publicKey<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> block <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"public key error"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	pubInterface<span class="token punctuation">,</span> err <span class="token operator">=</span> x509<span class="token punctuation">.</span><span class="token function">ParsePKIXPublicKey</span><span class="token punctuation">(</span>block<span class="token punctuation">.</span>Bytes<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">&#125;</span>
+	pub <span class="token operator">=</span> pubInterface<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>rsa<span class="token punctuation">.</span>PublicKey<span class="token punctuation">)</span>
+
+	<span class="token keyword">return</span> rsa<span class="token punctuation">.</span><span class="token function">EncryptPKCS1v15</span><span class="token punctuation">(</span>rand<span class="token punctuation">.</span>Reader<span class="token punctuation">,</span> pub<span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">//RsaDecryptByString 解密</span>
+<span class="token keyword">func</span> <span class="token function">RsaDecryptByString</span><span class="token punctuation">(</span>privateKey <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> data <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	block<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">:=</span> pem<span class="token punctuation">.</span><span class="token function">Decode</span><span class="token punctuation">(</span>privateKey<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> block <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"private key error"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	priv<span class="token punctuation">,</span> err <span class="token operator">:=</span> x509<span class="token punctuation">.</span><span class="token function">ParsePKCS1PrivateKey</span><span class="token punctuation">(</span>block<span class="token punctuation">.</span>Bytes<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> rsa<span class="token punctuation">.</span><span class="token function">DecryptPKCS1v15</span><span class="token punctuation">(</span>rand<span class="token punctuation">.</span>Reader<span class="token punctuation">,</span> priv<span class="token punctuation">,</span> data<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="从文件中读取公钥私钥"><a href="#从文件中读取公钥私钥" class="headerlink" title="从文件中读取公钥私钥"></a>从文件中读取公钥私钥</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//RsaEncrypt 加密</span>
+<span class="token keyword">func</span> <span class="token function">RsaEncrypt</span><span class="token punctuation">(</span>origData <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	publicKey<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadFile</span><span class="token punctuation">(</span><span class="token string">"public.pem"</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">&#125;</span>
+	block<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">:=</span> pem<span class="token punctuation">.</span><span class="token function">Decode</span><span class="token punctuation">(</span>publicKey<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> block <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"public key error"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	pubInterface<span class="token punctuation">,</span> err <span class="token operator">:=</span> x509<span class="token punctuation">.</span><span class="token function">ParsePKIXPublicKey</span><span class="token punctuation">(</span>block<span class="token punctuation">.</span>Bytes<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">&#125;</span>
+	pub <span class="token operator">:=</span> pubInterface<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>rsa<span class="token punctuation">.</span>PublicKey<span class="token punctuation">)</span>
+	<span class="token keyword">return</span> rsa<span class="token punctuation">.</span><span class="token function">EncryptPKCS1v15</span><span class="token punctuation">(</span>rand<span class="token punctuation">.</span>Reader<span class="token punctuation">,</span> pub<span class="token punctuation">,</span> origData<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">//RsaDecrypt 解密</span>
+<span class="token keyword">func</span> <span class="token function">RsaDecrypt</span><span class="token punctuation">(</span>ciphertext <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	privateKey<span class="token punctuation">,</span> err <span class="token operator">:=</span> ioutil<span class="token punctuation">.</span><span class="token function">ReadFile</span><span class="token punctuation">(</span><span class="token string">"private.pem"</span><span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">&#125;</span>
+
+	block<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">:=</span> pem<span class="token punctuation">.</span><span class="token function">Decode</span><span class="token punctuation">(</span>privateKey<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> block <span class="token operator">==</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> errors<span class="token punctuation">.</span><span class="token function">New</span><span class="token punctuation">(</span><span class="token string">"private key error!"</span><span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span>
+	priv<span class="token punctuation">,</span> err <span class="token operator">:=</span> x509<span class="token punctuation">.</span><span class="token function">ParsePKCS1PrivateKey</span><span class="token punctuation">(</span>block<span class="token punctuation">.</span>Bytes<span class="token punctuation">)</span>
+	<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> err
+	<span class="token punctuation">&#125;</span>
+	<span class="token keyword">return</span> rsa<span class="token punctuation">.</span><span class="token function">DecryptPKCS1v15</span><span class="token punctuation">(</span>rand<span class="token punctuation">.</span>Reader<span class="token punctuation">,</span> priv<span class="token punctuation">,</span> ciphertext<span class="token punctuation">)</span>
+<span class="token punctuation">&#125;</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="数据无限制加密解密"><a href="#数据无限制加密解密" class="headerlink" title="数据无限制加密解密"></a>数据无限制加密解密</h4><ul>
+<li><code>EncryptPKCS1v15</code>默认的可加密数据大小<code>&lt;</code>公钥<code>size()-11</code>, <strong>公钥size()<strong>通过</strong>(pub.N.BitLen() + 7) / 8</strong>得到。</li>
 </ul>
-<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><ul>
-<li>Encode(dst, src []byte)</li>
-<li>EncodeToString(src []byte) string</li>
-<li>EncodedLen(n int) int</li>
-<li>Decode(dst, src []byte) (n int, err error)</li>
-<li>DecodeString(s string) ([]byte, error)</li>
-<li>DecodedLen(n int) int</li>
-</ul>
-<h2 id="编码解码的三种方式"><a href="#编码解码的三种方式" class="headerlink" title="编码解码的三种方式"></a>编码解码的三种方式</h2><h3 id="使用NewEncoder-与NewDecoder"><a href="#使用NewEncoder-与NewDecoder" class="headerlink" title="使用NewEncoder()与NewDecoder()"></a>使用NewEncoder()与NewDecoder()</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//编码</span>
-buffer <span class="token operator">:=</span> bytes<span class="token punctuation">.</span>Buffer<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
-encoder <span class="token operator">:=</span> base32<span class="token punctuation">.</span><span class="token function">NewEncoder</span><span class="token punctuation">(</span>base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buffer<span class="token punctuation">)</span>
-<span class="token keyword">defer</span> encoder<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-encoder<span class="token punctuation">.</span><span class="token function">Write</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span><span class="token string">"hello NewEncoder"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token comment">//解码</span>
-decodeBuf <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">DecodedLen</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>buffer<span class="token punctuation">.</span><span class="token function">Bytes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-decoder <span class="token operator">:=</span> base32<span class="token punctuation">.</span><span class="token function">NewDecoder</span><span class="token punctuation">(</span>base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">,</span> <span class="token operator">&amp;</span>buffer<span class="token punctuation">)</span>
-decoder<span class="token punctuation">.</span><span class="token function">Read</span><span class="token punctuation">(</span>decodeBuf<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;&#x2F;RsaEncryptSizeNotLimit 加密
+func RsaEncryptSizeNotLimit(publicKey, data []byte) (string, error) &#123;
+	var (
+		block        *pem.Block
+		pubInterface interface&#123;&#125;
+		err          error
+		pub          *rsa.PublicKey
+		partLen      int
+		b            []byte
+	)
+	block, _ &#x3D; pem.Decode(publicKey)
+	if block &#x3D;&#x3D; nil &#123;
+		return &quot;&quot;, errors.New(&quot;public key error&quot;)
+	&#125;
+	pubInterface, err &#x3D; x509.ParsePKIXPublicKey(block.Bytes)
+	if err !&#x3D; nil &#123;
+		return &quot;&quot;, err
+	&#125;
+	pub &#x3D; pubInterface.(*rsa.PublicKey)
 
-<h3 id="使用EncodeToString-和DecodeString"><a href="#使用EncodeToString-和DecodeString" class="headerlink" title="使用EncodeToString()和DecodeString()"></a>使用EncodeToString()和DecodeString()</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//编码</span>
-encoder <span class="token operator">:=</span> base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">EncodeToString</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span><span class="token string">"hello EncodeToString"</span><span class="token punctuation">)</span>
-<span class="token comment">//解码</span>
-decoder<span class="token punctuation">,</span> err <span class="token operator">:=</span> base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">DecodeString</span><span class="token punctuation">(</span>encoder<span class="token punctuation">)</span>          <span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+	partLen &#x3D; pub.N.BitLen()&#x2F;8 - 11
+	chunks :&#x3D; split([]byte(data), partLen)
 
-<h3 id="使用Encode-和Decode"><a href="#使用Encode-和Decode" class="headerlink" title="使用Encode()和Decode()"></a>使用Encode()和Decode()</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//编码</span>
-data <span class="token operator">:=</span> <span class="token string">"hello encode"</span>
-buf <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">EncodedLen</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">Encode</span><span class="token punctuation">(</span>buf<span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token comment">//解码</span>
-debuf <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">,</span> base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">DecodedLen</span><span class="token punctuation">(</span><span class="token function">len</span><span class="token punctuation">(</span>buf<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-n<span class="token punctuation">,</span> err <span class="token operator">:=</span> base32<span class="token punctuation">.</span>StdEncoding<span class="token punctuation">.</span><span class="token function">Decode</span><span class="token punctuation">(</span>debuf<span class="token punctuation">,</span> buf<span class="token punctuation">)</span>
-fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token function">string</span><span class="token punctuation">(</span>debuf<span class="token punctuation">[</span><span class="token punctuation">:</span>n<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+	buffer :&#x3D; bytes.NewBufferString(&quot;&quot;)
+	for _, chunk :&#x3D; range chunks &#123;
+		b, err &#x3D; rsa.EncryptPKCS1v15(rand.Reader, pub, chunk)
+		if err !&#x3D; nil &#123;
+			return &quot;&quot;, err
+		&#125;
+		buffer.Write(b)
+	&#125;
 
+	return Base64Encode(buffer.Bytes()), nil
+&#125;
 
+&#x2F;&#x2F;RsaDecryptSizeNotLimit 解密
+func RsaDecryptSizeNotLimit(privateKey []byte, data string) ([]byte, error) &#123;
+	var (
+		block     *pem.Block
+		partLen   int
+		err       error
+		decode    []byte
+		buffer    *bytes.Buffer
+		chunks    [][]byte
+		chunk     []byte
+		decrypted []byte
+	)
+	block, _ &#x3D; pem.Decode(privateKey)
+	if block &#x3D;&#x3D; nil &#123;
+		return nil, errors.New(&quot;private key error&quot;)
+	&#125;
+	priv, err :&#x3D; x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err !&#x3D; nil &#123;
+		return nil, err
+	&#125;
 
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://github.com/golang/go/blob/7eaabae84d8b69216356b84ebc7c86917100f99a/src/encoding/base32/base32.go#L6">官方base32地址</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.rfc-editor.org/rfc/inline-errata/rfc4648.html">RFC 4648</a></p>
+	partLen &#x3D; priv.N.BitLen() &#x2F; 8
+	decode, err &#x3D; Base64Decode(data)
+	if err !&#x3D; nil &#123;
+		return nil, err
+	&#125;
+	chunks &#x3D; split([]byte(decode), partLen)
+	buffer &#x3D; bytes.NewBufferString(&quot;&quot;)
+	for _, chunk &#x3D; range chunks &#123;
+		decrypted, err &#x3D; rsa.DecryptPKCS1v15(rand.Reader, priv, chunk)
+		if err !&#x3D; nil &#123;
+			return nil, err
+		&#125;
+		buffer.Write(decrypted)
+	&#125;
+
+	return buffer.Bytes(), err
+&#125;
+
+func split(buf []byte, lim int) [][]byte &#123;
+	var chunk []byte
+	chunks :&#x3D; make([][]byte, 0, len(buf)&#x2F;lim+1)
+	for len(buf) &gt;&#x3D; lim &#123;
+		chunk, buf &#x3D; buf[:lim], buf[lim:]
+		chunks &#x3D; append(chunks, chunk)
+	&#125;
+	if len(buf) &gt; 0 &#123;
+		chunks &#x3D; append(chunks, buf[:len(buf)])
+	&#125;
+	return chunks
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/RSA%E7%AE%97%E6%B3%95/263310?fromtitle=RSA&fromid=210678&fr=aladdin#reference-[5]-10613-wrap">RSA算法 百度百科</a></p>
 
                 
             </div>
@@ -545,12 +706,16 @@ fmt<span class="token punctuation">.</span><span class="token function">Println<
                     
                         <div class="article-tag">
                             
+                                <a href="/tags/rsa/">
+                                    <span class="chip bg-color">rsa</span>
+                                </a>
+                            
                                 <a href="/tags/Golang/">
                                     <span class="chip bg-color">Golang</span>
                                 </a>
                             
-                                <a href="/tags/base32/">
-                                    <span class="chip bg-color">base32</span>
+                                <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E7%AE%97%E6%B3%95/">
+                                    <span class="chip bg-color">加密解密算法</span>
                                 </a>
                             
                         </div>
@@ -722,9 +887,68 @@ fmt<span class="token punctuation">.</span><span class="token function">Println<
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/09/03/notes/rsa-jia-mi-jie-mi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="RSA加密解密">
+                        
+                        <span class="card-title">RSA加密解密</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            RSA加密解密学习笔记
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-03
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/rsa/">
+                        <span class="chip bg-color">rsa</span>
+                    </a>
+                    
+                    <a href="/tags/Golang/">
+                        <span class="chip bg-color">Golang</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E7%AE%97%E6%B3%95/">
+                        <span class="chip bg-color">加密解密算法</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2021/08/21/notes/time-package-ticker/">
                     <div class="card-image">
@@ -742,9 +966,9 @@ fmt<span class="token punctuation">.</span><span class="token function">Println<
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-21
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -766,67 +990,6 @@ fmt<span class="token punctuation">.</span><span class="token function">Println<
                     
                     <a href="/tags/Ticker/">
                         <span class="chip bg-color">Ticker</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/08/09/trans/tcmalloc-thread-caching-malloc/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="TCMalloc : Thread-Caching Malloc【译】">
-                        
-                        <span class="card-title">TCMalloc : Thread-Caching Malloc【译】</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            TCMalloc垃圾收集
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-09
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/golang/" class="post-category">
-                                    golang
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Golang/">
-                        <span class="chip bg-color">Golang</span>
-                    </a>
-                    
-                    <a href="/tags/TCMalloc/">
-                        <span class="chip bg-color">TCMalloc</span>
-                    </a>
-                    
-                    <a href="/tags/GC/">
-                        <span class="chip bg-color">GC</span>
-                    </a>
-                    
-                    <a href="/tags/%E8%AF%91%E6%96%87/">
-                        <span class="chip bg-color">译文</span>
                     </a>
                     
                 </div>
