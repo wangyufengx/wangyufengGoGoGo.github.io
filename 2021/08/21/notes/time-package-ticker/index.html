@@ -496,8 +496,7 @@
 <p>  停止关闭<code>ticker</code><br>  停止后，将不再发送<code>ticks</code><br>停止不会关闭通道，以防止从通道读取的并发 goroutine 看到错误的<code>tick</code>。</p>
 </li>
 <li><p><code>Reset(d Duration)</code></p>
-<p>重置停止<code>ticker</code>并将其周期重置为指定的持续时间。</p>
-<p>下一个<code>tick</code>将在新周期结束后到达。</p>
+<p>重置停止<code>ticker</code>并将其周期重置为指定的持续时间。<br>下一个<code>tick</code>将在新周期结束后到达。</p>
 </li>
 </ul>
 <h3 id="定时任务-以60秒为例-NewTicker"><a href="#定时任务-以60秒为例-NewTicker" class="headerlink" title="定时任务(以60秒为例)NewTicker"></a>定时任务(以60秒为例)NewTicker</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go">ticker <span class="token operator">:=</span> time<span class="token punctuation">.</span><span class="token function">NewTicker</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>Second <span class="token operator">*</span> <span class="token number">60</span><span class="token punctuation">)</span>
