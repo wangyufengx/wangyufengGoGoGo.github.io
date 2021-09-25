@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="PEAKBRO">
+    <meta name="keywords" content="fmt格式化指令, PEAKBRO">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>PEAKBRO</title>
+    <title>fmt格式化指令 | PEAKBRO</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -288,12 +288,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title"></h1>
+                    <h1 class="description center-align post-title">fmt格式化指令</h1>
                 </div>
             </div>
         </div>
@@ -407,12 +407,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Golang/">
+                                <span class="chip bg-color">Golang</span>
+                            </a>
+                        
+                            <a href="/tags/fmt/">
+                                <span class="chip bg-color">fmt</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/golang/" class="post-category">
+                                golang
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -421,28 +438,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-25
+                    2021-09-25
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-25
+                    2021-09-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1
+                    1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    4 分
                 </div>
                 
 
@@ -460,7 +477,291 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="Blog"><a href="#Blog" class="headerlink" title="Blog"></a>Blog</h1>
+                <p>golang的fmt包格式化I/O函数的实现与类似C语言的<code>printf</code>和<code>scanf</code>类似。格式的<code>verbs</code>源于C,但是更简单。以下在路径<code>src/fmt/doc.go</code>可找到。</p>
+<h3 id="一般的指令"><a href="#一般的指令" class="headerlink" title="一般的指令"></a>一般的指令</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%v</td>
+<td>该值的默认格式</td>
+</tr>
+<tr>
+<td>%+v</td>
+<td>当打印结构体时，+表示添加字段名称</td>
+</tr>
+<tr>
+<td>%#v</td>
+<td>该值的go语法表示形式</td>
+</tr>
+<tr>
+<td>%T</td>
+<td>该值类型</td>
+</tr>
+<tr>
+<td>%%</td>
+<td>输出%，无任何值</td>
+</tr>
+</tbody></table>
+<h4 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">type</span> People <span class="token keyword">struct</span> <span class="token punctuation">&#123;</span>
+	Name <span class="token builtin">string</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">func</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%%\n"</span><span class="token punctuation">)</span>			<span class="token comment">//%</span>
+	t <span class="token operator">:=</span> People<span class="token punctuation">&#123;</span>Name<span class="token punctuation">:</span> <span class="token string">"golang"</span><span class="token punctuation">&#125;</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%v\n"</span><span class="token punctuation">,</span> t<span class="token punctuation">)</span>		<span class="token comment">//&#123;golang&#125;</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%+v\n"</span><span class="token punctuation">,</span> t<span class="token punctuation">)</span>		<span class="token comment">//&#123;Name:golang&#125;</span>
+    fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> t<span class="token punctuation">)</span>		<span class="token comment">//main.People&#123;Name:"golang"&#125;</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%T\n"</span><span class="token punctuation">,</span> t<span class="token punctuation">)</span>		<span class="token comment">//main.People</span>
+	
+	<span class="token comment">//#v</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>                                    <span class="token comment">//1</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token string">"hello"</span><span class="token punctuation">)</span>                              <span class="token comment">//“hello"</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">&#123;</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>                          <span class="token comment">//[]int&#123;1,2&#125;</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span><span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>             <span class="token comment">//map[string]interface &#123;&#125;&#123;&#125;</span>
+	fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token keyword">struct</span><span class="token punctuation">&#123;</span> Hello <span class="token builtin">string</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#123;</span>Hello<span class="token punctuation">:</span> <span class="token string">"tom"</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token comment">//struct &#123; Hello string &#125;&#123;Hello:"tom"&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="布尔类型占位符"><a href="#布尔类型占位符" class="headerlink" title="布尔类型占位符"></a>布尔类型占位符</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%t</td>
+<td>true或者false</td>
+</tr>
+</tbody></table>
+<h3 id="实例-1"><a href="#实例-1" class="headerlink" title="实例"></a>实例</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go">fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%t"</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span>	<span class="token comment">//true</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h3 id="Integer类型的占位符"><a href="#Integer类型的占位符" class="headerlink" title="Integer类型的占位符"></a>Integer类型的占位符</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%b</td>
+<td>一个二进制整数，将一个整数格式化为二进制的表达式</td>
+</tr>
+<tr>
+<td>%c</td>
+<td>一个Unicode的字符</td>
+</tr>
+<tr>
+<td>%d</td>
+<td>十进制数值</td>
+</tr>
+<tr>
+<td>%o</td>
+<td>八进制数值</td>
+</tr>
+<tr>
+<td>%O</td>
+<td>以0o为前置的八进制数值</td>
+</tr>
+<tr>
+<td>%q</td>
+<td>单引号围绕的字符字面量的值，由Go语法安全地转义</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>小写的十六进制数值</td>
+</tr>
+<tr>
+<td>%X</td>
+<td>大写的十六进制数值</td>
+</tr>
+<tr>
+<td>%U</td>
+<td>一个Unicode表示法表示的整型码值,默认是4个数字字符</td>
+</tr>
+</tbody></table>
+<h4 id="实例-2"><a href="#实例-2" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%b\n"</span><span class="token punctuation">,</span> <span class="token number">12</span><span class="token punctuation">)</span>     <span class="token comment">//1100</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%c\n"</span><span class="token punctuation">,</span> <span class="token number">97</span><span class="token punctuation">)</span>     <span class="token comment">//a</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%d\n"</span><span class="token punctuation">,</span> <span class="token number">010</span><span class="token punctuation">)</span>    <span class="token comment">//8</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%o\n"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>     <span class="token comment">//12</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%O\n"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>     <span class="token comment">//0o12</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%q\n"</span><span class="token punctuation">,</span> <span class="token number">0x4E2D</span><span class="token punctuation">)</span> <span class="token comment">//'中'</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>     <span class="token comment">//a</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%X\n"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span>     <span class="token comment">//A</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%U\n"</span><span class="token punctuation">,</span> <span class="token number">97</span><span class="token punctuation">)</span>     <span class="token comment">//U+0061</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="浮点数和复数的组成部分"><a href="#浮点数和复数的组成部分" class="headerlink" title="浮点数和复数的组成部分"></a>浮点数和复数的组成部分</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%b</td>
+<td>无小数部分，指数为二的幂的科学计数法，与strconv.FormatFloat的‘b’转换格式一致</td>
+</tr>
+<tr>
+<td>%e</td>
+<td>科学计数法</td>
+</tr>
+<tr>
+<td>%E</td>
+<td>科学计数法</td>
+</tr>
+<tr>
+<td>%f</td>
+<td>有小数点无指数</td>
+</tr>
+<tr>
+<td>%F</td>
+<td>有小数点无指数，注：是%f的同义词</td>
+</tr>
+<tr>
+<td>%g</td>
+<td>根据情况选择%e或%f,大指数选%e,否则选%f</td>
+</tr>
+<tr>
+<td>%G</td>
+<td>根据情况选择%E或%F,大指数选%E,否则选%F</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制表示法（十进制幂为两个指数）</td>
+</tr>
+<tr>
+<td>%X</td>
+<td>大写的十六进制表示法</td>
+</tr>
+</tbody></table>
+<h4 id="实例-3"><a href="#实例-3" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%b\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//4953959590107546p-52</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%e\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//1.234568e+05</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%E\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//1.234568E+05</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%f\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//123456.789000</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%F\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//123456.789000</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%g\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//123456.789</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%G\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//123456.789</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//0x1.e240c9fbe76c9p+16</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%X\n"</span><span class="token punctuation">,</span> <span class="token number">123456.789</span><span class="token punctuation">)</span>	<span class="token comment">//0x1.e240c9fbe76c9p+16</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="字符串与字节切片"><a href="#字符串与字节切片" class="headerlink" title="字符串与字节切片"></a>字符串与字节切片</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%s</td>
+<td>输出字符串(string类型或[]byte)</td>
+</tr>
+<tr>
+<td>%q</td>
+<td>双引号围绕的字符串，由Go语法安全地转义</td>
+</tr>
+<tr>
+<td>%x</td>
+<td>十六进制，小写字母，每个字节两个字符</td>
+</tr>
+<tr>
+<td>%X</td>
+<td>十六进制，大写字母，每个字节两个字符</td>
+</tr>
+</tbody></table>
+<h4 id="实例-4"><a href="#实例-4" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">str <span class="token operator">:=</span> <span class="token string">"Golang"</span>
+str1 <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>str<span class="token punctuation">)</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span> str<span class="token punctuation">)</span>  <span class="token comment">//Golang</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%s\n"</span><span class="token punctuation">,</span> str1<span class="token punctuation">)</span> <span class="token comment">//Golang</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%q\n"</span><span class="token punctuation">,</span> str<span class="token punctuation">)</span>  <span class="token comment">//"Golang"</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%x\n"</span><span class="token punctuation">,</span> str<span class="token punctuation">)</span>  <span class="token comment">//476f6c616e67</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%X\n"</span><span class="token punctuation">,</span> str<span class="token punctuation">)</span>  <span class="token comment">//476F6C616E67</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%p</td>
+<td>以16进制表示的切片第0个元素的地址，开头为0x</td>
+</tr>
+</tbody></table>
+<h4 id="实例-5"><a href="#实例-5" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">slices <span class="token operator">:=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">int</span><span class="token punctuation">&#123;</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">&#125;</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> slices<span class="token punctuation">)</span> <span class="token comment">//0xc00000e3a0</span>
+fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>slices<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span>    <span class="token comment">//0xc00000e3a0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="指针"><a href="#指针" class="headerlink" title="指针"></a>指针</h3><table>
+<thead>
+<tr>
+<th>格式化指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%p</td>
+<td>以16进制表示，前缀为0x</td>
+</tr>
+</tbody></table>
+<p>注：**%b, %d, %o, %x and %X这些指令也可与指针配合使用,将值格式化为整数.**</p>
+<h4 id="实例-6"><a href="#实例-6" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">x <span class="token operator">:=</span> <span class="token number">1</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> <span class="token operator">&amp;</span>x<span class="token punctuation">)</span> <span class="token comment">//0xc0000160f0</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h3 id="v的不同类型下的默认的格式化指令"><a href="#v的不同类型下的默认的格式化指令" class="headerlink" title="%v的不同类型下的默认的格式化指令"></a>%v的不同类型下的默认的格式化指令</h3><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>格式化指令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bool</td>
+<td>%t</td>
+</tr>
+<tr>
+<td>int、int8 etc</td>
+<td>%d</td>
+</tr>
+<tr>
+<td>uint、uint8 etc</td>
+<td>%d(%#x如果是使用%#v打印)</td>
+</tr>
+<tr>
+<td>float32、complex64 etc</td>
+<td>%g</td>
+</tr>
+<tr>
+<td>string</td>
+<td>%s</td>
+</tr>
+<tr>
+<td>chan</td>
+<td>%p</td>
+</tr>
+<tr>
+<td>pointer</td>
+<td>%p</td>
+</tr>
+</tbody></table>
+<h4 id="实例-7"><a href="#实例-7" class="headerlink" title="实例"></a>实例</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//uint</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token function">int</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">//15</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%v\n"</span><span class="token punctuation">,</span> <span class="token function">uint</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">//15</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#v\n"</span><span class="token punctuation">,</span> <span class="token function">uint</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">//0xf</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#x\n"</span><span class="token punctuation">,</span> <span class="token function">int</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span>  <span class="token comment">//0xf</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%#x\n"</span><span class="token punctuation">,</span> <span class="token function">uint</span><span class="token punctuation">(</span><span class="token number">15</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">//0xf</span>
+<span class="token comment">//chan</span>
+ch <span class="token operator">:=</span> <span class="token function">make</span><span class="token punctuation">(</span><span class="token keyword">chan</span> <span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+ch <span class="token operator">&lt;-</span> <span class="token string">"golang"</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%v\n"</span><span class="token punctuation">,</span> ch<span class="token punctuation">)</span> <span class="token comment">//0xc000046060</span>
+fmt<span class="token punctuation">.</span><span class="token function">Printf</span><span class="token punctuation">(</span><span class="token string">"%p\n"</span><span class="token punctuation">,</span> ch<span class="token punctuation">)</span> <span class="token comment">//0xc000046060</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>对于复合对象，使用以上规则递归的打印对象</strong></p>
+
                 
             </div>
             <hr/>
@@ -473,7 +774,15 @@
                 <div class="post-meta__tag-list" style="display: inline-block;">
                     
                         <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
+                            
+                                <a href="/tags/Golang/">
+                                    <span class="chip bg-color">Golang</span>
+                                </a>
+                            
+                                <a href="/tags/fmt/">
+                                    <span class="chip bg-color">fmt</span>
+                                </a>
+                            
                         </div>
                     
                 </div>
@@ -648,34 +957,50 @@
                 <i class="far fa-dot-circle"></i>&nbsp;本篇
             </div>
             <div class="card">
-                <a href="/README.html">
+                <a href="/2021/09/25/notes/fmt-ge-shi-hua-zhi-ling/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="fmt格式化指令">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">fmt格式化指令</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            fmt格式化指令学习笔记
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            PEAKBRO
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/golang/" class="post-category">
+                                    golang
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
 
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Golang/">
+                        <span class="chip bg-color">Golang</span>
+                    </a>
+                    
+                    <a href="/tags/fmt/">
+                        <span class="chip bg-color">fmt</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
@@ -683,37 +1008,52 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/README.html">
+                <a href="/2021/09/11/packages/embed-package/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="golang embed包翻译">
                         
-                        <span class="card-title"></span>
+                        <span class="card-title">golang embed包翻译</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            
+                            golang embed包翻译
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-11
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fas fa-user fa-fw"></i>
-                            PEAKBRO
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Golang-packages/" class="post-category">
+                                    Golang packages
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/embed/">
+                        <span class="chip bg-color">embed</span>
+                    </a>
+                    
+                    <a href="/tags/packages/">
+                        <span class="chip bg-color">packages</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>
