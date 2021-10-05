@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="jwt, PEAKBRO">
+    <meta name="keywords" content="golang项目布局, PEAKBRO">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>jwt | PEAKBRO</title>
+    <title>golang项目布局 | PEAKBRO</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -288,12 +288,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">jwt</h1>
+                    <h1 class="description center-align post-title">golang项目布局</h1>
                 </div>
             </div>
         </div>
@@ -409,12 +409,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/JWT/">
-                                <span class="chip bg-color">JWT</span>
+                            <a href="/tags/Golang/">
+                                <span class="chip bg-color">Golang</span>
                             </a>
                         
-                            <a href="/tags/token/">
-                                <span class="chip bg-color">token</span>
+                            <a href="/tags/layout/">
+                                <span class="chip bg-color">layout</span>
                             </a>
                         
                     </div>
@@ -438,28 +438,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-08-21
+                    2021-10-05
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-09-27
+                    2021-10-05
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    504
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    6 分
+                    1 分
                 </div>
                 
 
@@ -477,154 +477,32 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="什么是JWT"><a href="#什么是JWT" class="headerlink" title="什么是JWT?"></a>什么是JWT?</h3><p>JSON Web Token (JWT) 是一个开放标准 ( <a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7519">RFC 7519</a> )，它定义了一种紧凑且自包含的方式，用于在各方之间作为 JSON 对象安全地传输信息。该信息可以被验证和信任，因为它是经过数字签名的。JWT 可以使用secret（使用<strong>HMAC</strong>算法）或使用<strong>RSA</strong>或<strong>ECDSA</strong>的公钥/私钥对进行<strong>签名</strong>。</p>
-<p>虽然 JWT 可以加密以在各方之间提供保密，但我们将重点关注<em>签名</em>令牌。签名令牌可以验证其中包含的声明的<em>完整性</em>，而加密令牌则对其他方<em>隐藏</em>这些声明。当使用公钥/私钥对对令牌进行签名时，签名还证明只有持有私钥的一方才是对其进行签名的一方。</p>
-<h3 id="JWT结构"><a href="#JWT结构" class="headerlink" title="JWT结构"></a>JWT结构</h3><p>在其紧凑形式中，JSON Web Tokens 由用点 ( <code>.</code>)分隔的三个部分组成，它们是：</p>
-<ul>
-<li>标题（Header）</li>
-<li>有效负载（Payload）</li>
-<li>签名（Signature）</li>
-</ul>
-<p>因此，JWT 通常如下所示。</p>
-<pre class="line-numbers language-none"><code class="language-none">xxxxx.yyyyy.zzzzz<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <p>​    很多人在使用go的时候会想，golang的项目布局该如何定义，怎样定义才是标准的。实际上go官方并没给出golang项目布局的定义标准。以下是社区应用广泛的一种项目布局。</p>
+<h3 id="golang-standards-project-layout"><a href="#golang-standards-project-layout" class="headerlink" title="golang-standards/project-layout"></a><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></h3><p>该布局不是Go核心团队定义的官方标准，它是github上stars数目最多的项目布局。也是Go生态系统中一组常见的项目布局模式。</p>
+<pre class="line-numbers language-none"><code class="language-none">https:&#x2F;&#x2F;github.com&#x2F;golang-standards&#x2F;project-layout<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>示例：</p>
-<pre class="line-numbers language-none"><code class="language-none">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<p>项目布局如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">&#x2F;cmd 项目主要应用程序。每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，&#x2F;cmd&#x2F;myapp)。
+&#x2F;internal 私有应用程序和库代码。（代码不是可重用的或不希望其他人重用它）
+&#x2F;pkg 外部应用可以使用的库代码。（代码可以导入并在其他项目中使用）
+&#x2F;api OpenAPI&#x2F;Swagger 规范，JSON 模式文件，协议定义文件。
+&#x2F;web 特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。
+&#x2F;configs 配置文件模板或默认配置。
+&#x2F;init 系统初始化或进程管理配置。
+&#x2F;scripts 执行各种构建、安装、分析等操作的脚本。
+&#x2F;build 打包和持续集成。
+&#x2F;deployments 部署。
+&#x2F;test 额外的测试应用程序和测试数据。
+&#x2F;docs 设计和用户文档。
+&#x2F;tools 项目支持的工具。
+&#x2F;examples 你的应用程序或公共库示例。
+&#x2F;third_party 外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。
+&#x2F;githooks git hooks代码审查。
+&#x2F;asserts 与存储库一起使用的其他资产(图像、徽标等)。
+&#x2F;website 如果你不使用 Github 页面，则在这里放置项目的网站数据。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<h4 id="标题（Header）"><a href="#标题（Header）" class="headerlink" title="标题（Header）"></a>标题（Header）</h4><p>标头<em>通常</em>由两部分组成：令牌的类型，即 JWT，以及正在使用的签名算法，例如 HMAC SHA256 或 RSA。它们会组成一个JSON对象，用于描述其元数据。例如：</p>
-<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-  <span class="token property">"alg"</span><span class="token operator">:</span> <span class="token string">"HS256"</span><span class="token punctuation">,</span>
-  <span class="token property">"typ"</span><span class="token operator">:</span> <span class="token string">"JWT"</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>​    在上述JSON对象中，alg字段用来表示使用的签名算法。typ字段用来表示使用的令牌类型。然后，这个 JSON 被<strong>Base64Url</strong>编码以形成 JWT 的第一部分。</p>
-<pre class="line-numbers language-none"><code class="language-none">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h4 id="有效负载（Payload）"><a href="#有效负载（Payload）" class="headerlink" title="有效负载（Payload）"></a>有效负载（Payload）</h4><p>有效负载是一个JSON对象，主要用于存储在JWT中实际传输的数据。</p>
-<p>例如：</p>
-<pre class="line-numbers language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-  <span class="token property">"sub"</span><span class="token operator">:</span> <span class="token string">"1234567890"</span><span class="token punctuation">,</span>
-  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"John Doe"</span><span class="token punctuation">,</span>
-  <span class="token property">"admin"</span><span class="token operator">:</span> <span class="token boolean">true</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>有效负载中包含声明。声明是关于实体（通常是用户）和附加数据的声明。共有三种类型的声明：<em>注册声明</em>、<em>公共声明</em>和<em>私有声明</em>。</p>
-<ul>
-<li><p><strong>注册声明</strong>：这些是一组预定义的声明，这些声明不是强制性的，而是推荐的，以提供一组有用的、可互操作的声明。</p>
-<ul>
-<li>aud（Audience）：受众，即接受JWT的一方。</li>
-<li>exp（ExpiresAt）：JWT的过期时间，过期时间必须大于签发时间。</li>
-<li>jti（JWT Id）：JWT的唯一标识。</li>
-<li>iat（IssuedAt）：签发时间。</li>
-<li>iss（Issuer）：JWT的签发者。</li>
-<li>nbf（Not Before）：JWT的生效时间，如果时间未到，则不可用。</li>
-<li>sub（Subject）：主题。</li>
-</ul>
-<blockquote>
-<p>请注意，声明名称只有三个字符，因为 JWT 是紧凑的。</p>
-</blockquote>
-</li>
-<li><p><strong>公共声明</strong>：这些可以由使用 JWT 的人随意定义。一般添加用户的相关信息或其他业务需要的必要信息.但不建议添加敏感信息，因为该部分在客户端可解密.</p>
-</li>
-<li><p><strong>私有声明</strong>：这些都是使用它们同意并既不是当事人之间建立共享信息的自定义声明<em>注册</em>或<em>公众</em>的权利要求。</p>
-</li>
-</ul>
-<p>然后对有效负载进行<strong>Base64Url</strong>编码以形成 JSON Web 令牌的第二部分。</p>
-<pre class="line-numbers language-none"><code class="language-none">eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<blockquote>
-<p>请注意，对于已签名的令牌，此信息虽然受到防篡改保护，但任何人都可以读取。除非加密，否则不要将机密信息放在 JWT 的负载或标头元素中。</p>
-</blockquote>
-<h4 id="签名（Signature）"><a href="#签名（Signature）" class="headerlink" title="签名（Signature）"></a>签名（Signature）</h4><p>签名是对前面两个部分（Header-Playload）进行约定算法和规则的签名。签名一般用于校验消息在整个过程中有没有被篡改，对于使用了secret进行签名的令牌还可以验证JWT的发送者是否是它的真实身份。</p>
-<p>例如，如果要使用 HMAC SHA256 算法，则签名将通过以下方式创建：</p>
-<pre class="line-numbers language-none"><code class="language-none">HMACSHA256(
-  base64UrlEncode(header) + &quot;.&quot; +
-  base64UrlEncode(payload),
-  secret)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<pre class="line-numbers language-none"><code class="language-none">SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h3 id="JWT应用"><a href="#JWT应用" class="headerlink" title="JWT应用"></a>JWT应用</h3><p>在身份验证中，当用户使用其凭据成功登录时，将返回 JSON Web Token。由于令牌是凭证，因此必须非常小心以防止出现安全问题。通常，您不应将令牌保留的时间超过所需的时间。</p>
-<p>由于缺乏安全性，您也不应该在浏览器存储中存储敏感的会话数据。</p>
-<p>每当用户想要访问受保护的路由或资源时，用户代理应该发送 JWT，通常在使用<strong>Bearer</strong>模式的<strong>Authorization</strong>标头中。标题的内容应如下所示：</p>
-<pre class="line-numbers language-none"><code class="language-none">Authorization: Bearer &lt;token&gt;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<p>在某些情况下，这可以是无状态授权机制。服务器的受保护路由将检查<code>Authorization</code>标头中的有效 JWT ，如果存在，则用户将被允许访问受保护的资源。如果 JWT 包含必要的数据，则可能会减少为某些操作查询数据库的需要，尽管情况并非总是如此。</p>
-<p>如果令牌在<code>Authorization</code>标头中发送，跨源资源共享 (CORS) 不会成为问题，因为它不使用 cookie。</p>
-<h3 id="JWT工作流程"><a href="#JWT工作流程" class="headerlink" title="JWT工作流程"></a>JWT工作流程</h3><ul>
-<li><p>首先，客户端向服务端申请JWT令牌，这个过程通常是登录功能。即：由用户名和密码换取JWT令牌。</p>
-</li>
-<li><p>当你访问系统其他的接口时，在HTTP的header中携带JWT令牌。</p>
-</li>
-<li><p>服务端解签验证JWT。</p>
-</li>
-</ul>
-<h3 id="golang-代码实现示例"><a href="#golang-代码实现示例" class="headerlink" title="golang 代码实现示例"></a>golang 代码实现示例</h3><p>拉取<code>jwt</code>库。</p>
-<pre class="line-numbers language-none"><code class="language-none">go get github.com&#x2F;golang-jwt&#x2F;jwt<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-
-<blockquote>
-<p>github上star最多的是<code>github.com/dgrijalva/jwt-go</code>，但是该库已经不在维护，源代码迁移到新库<code>github.com/golang-jwt/jwt</code>中维护。</p>
-</blockquote>
-<h4 id="生成Token"><a href="#生成Token" class="headerlink" title="生成Token"></a>生成Token</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">GenerateToken</span><span class="token punctuation">(</span>username<span class="token punctuation">,</span> password <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">&#123;</span>
-	claims <span class="token operator">:=</span> jwt<span class="token punctuation">.</span>MapClaims<span class="token punctuation">&#123;</span>
-		<span class="token string">"exp"</span><span class="token punctuation">:</span>      time<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span>time<span class="token punctuation">.</span>Hour <span class="token operator">*</span> <span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Unix</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-		<span class="token string">"iat"</span><span class="token punctuation">:</span>      time<span class="token punctuation">.</span><span class="token function">Now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Unix</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-		<span class="token string">"username"</span><span class="token punctuation">:</span> username<span class="token punctuation">,</span>
-		<span class="token string">"password"</span><span class="token punctuation">:</span> password<span class="token punctuation">,</span>
-	<span class="token punctuation">&#125;</span>
-	token <span class="token operator">:=</span> jwt<span class="token punctuation">.</span><span class="token function">NewWithClaims</span><span class="token punctuation">(</span>jwt<span class="token punctuation">.</span>SigningMethodHS256<span class="token punctuation">,</span> claims<span class="token punctuation">)</span>
-	t<span class="token punctuation">,</span> <span class="token boolean">_</span> <span class="token operator">:=</span> token<span class="token punctuation">.</span><span class="token function">SignedString</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span><span class="token function">Getenv</span><span class="token punctuation">(</span>Secret<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-	<span class="token keyword">return</span> t
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="校验Token"><a href="#校验Token" class="headerlink" title="校验Token"></a>校验Token</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token keyword">func</span> <span class="token function">ValidateToken</span><span class="token punctuation">(</span>token <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token operator">*</span>jwt<span class="token punctuation">.</span>Token<span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> jwt<span class="token punctuation">.</span><span class="token function">Parse</span><span class="token punctuation">(</span>token<span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>token <span class="token operator">*</span>jwt<span class="token punctuation">.</span>Token<span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">if</span> <span class="token boolean">_</span><span class="token punctuation">,</span> ok <span class="token operator">:=</span> token<span class="token punctuation">.</span>Method<span class="token punctuation">.</span><span class="token punctuation">(</span><span class="token operator">*</span>jwt<span class="token punctuation">.</span>SigningMethodHMAC<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token operator">!</span>ok <span class="token punctuation">&#123;</span>
-			<span class="token comment">//nil secret key</span>
-			<span class="token keyword">return</span> <span class="token boolean">nil</span><span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Errorf</span><span class="token punctuation">(</span><span class="token string">"unexpected signing method: %v"</span><span class="token punctuation">,</span> token<span class="token punctuation">.</span>Header<span class="token punctuation">[</span><span class="token string">"alg"</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-		<span class="token punctuation">&#125;</span>
-		<span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span>os<span class="token punctuation">.</span><span class="token function">Getenv</span><span class="token punctuation">(</span><span class="token string">"JWT_SECRET"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
-	<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="NewWithClaims函数源码实现"><a href="#NewWithClaims函数源码实现" class="headerlink" title="NewWithClaims函数源码实现"></a><a target="_blank" rel="noopener" href="https://github.com/golang-jwt/jwt/blob/fd8cd69d8eb674b14c031ef57fccf0cc7bbe5978/token.go#L37">NewWithClaims</a>函数源码实现</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">//新建token</span>
-<span class="token keyword">func</span> <span class="token function">NewWithClaims</span><span class="token punctuation">(</span>method SigningMethod<span class="token punctuation">,</span> claims Claims<span class="token punctuation">)</span> <span class="token operator">*</span>Token <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> <span class="token operator">&amp;</span>Token<span class="token punctuation">&#123;</span>
-		Header<span class="token punctuation">:</span> <span class="token keyword">map</span><span class="token punctuation">[</span><span class="token builtin">string</span><span class="token punctuation">]</span><span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#123;</span> <span class="token comment">//header</span>
-			<span class="token string">"typ"</span><span class="token punctuation">:</span> <span class="token string">"JWT"</span><span class="token punctuation">,</span>
-			<span class="token string">"alg"</span><span class="token punctuation">:</span> method<span class="token punctuation">.</span><span class="token function">Alg</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
-		<span class="token punctuation">&#125;</span><span class="token punctuation">,</span>
-		Claims<span class="token punctuation">:</span> claims<span class="token punctuation">,</span> <span class="token comment">//playload</span>
-		Method<span class="token punctuation">:</span> method<span class="token punctuation">,</span>	<span class="token comment">//签名算法</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="SignedString方法源码实现"><a href="#SignedString方法源码实现" class="headerlink" title="SignedString方法源码实现"></a>SignedString方法源码实现</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// Get the complete, signed token</span>
-<span class="token keyword">func</span> <span class="token punctuation">(</span>t <span class="token operator">*</span>Token<span class="token punctuation">)</span> <span class="token function">SignedString</span><span class="token punctuation">(</span>key <span class="token keyword">interface</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span> <span class="token punctuation">(</span><span class="token builtin">string</span><span class="token punctuation">,</span> <span class="token builtin">error</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">var</span> sig<span class="token punctuation">,</span> sstr <span class="token builtin">string</span>
-	<span class="token keyword">var</span> err <span class="token builtin">error</span>
-	<span class="token keyword">if</span> sstr<span class="token punctuation">,</span> err <span class="token operator">=</span> t<span class="token punctuation">.</span><span class="token function">SigningString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
-	<span class="token punctuation">&#125;</span>
-	<span class="token keyword">if</span> sig<span class="token punctuation">,</span> err <span class="token operator">=</span> t<span class="token punctuation">.</span>Method<span class="token punctuation">.</span><span class="token function">Sign</span><span class="token punctuation">(</span>sstr<span class="token punctuation">,</span> key<span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">return</span> <span class="token string">""</span><span class="token punctuation">,</span> err
-	<span class="token punctuation">&#125;</span>
-    <span class="token comment">//返回</span>
-	<span class="token keyword">return</span> strings<span class="token punctuation">.</span><span class="token function">Join</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">string</span><span class="token punctuation">&#123;</span>sstr<span class="token punctuation">,</span> sig<span class="token punctuation">&#125;</span><span class="token punctuation">,</span> <span class="token string">"."</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token boolean">nil</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h4 id="加密部分源码实现"><a href="#加密部分源码实现" class="headerlink" title="加密部分源码实现"></a>加密部分源码实现</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go"><span class="token comment">// Encode JWT specific base64url encoding with padding stripped</span>
-<span class="token keyword">func</span> <span class="token function">EncodeSegment</span><span class="token punctuation">(</span>seg <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token builtin">byte</span><span class="token punctuation">)</span> <span class="token builtin">string</span> <span class="token punctuation">&#123;</span>
-	<span class="token keyword">return</span> base64<span class="token punctuation">.</span>RawURLEncoding<span class="token punctuation">.</span><span class="token function">EncodeToString</span><span class="token punctuation">(</span>seg<span class="token punctuation">)</span>
-<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
-
-<blockquote>
-<p>base64加密解密可逆，也就是说token中的内容任何人都可以读取。必要时，加密携带的数据。</p>
-</blockquote>
-<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><p><a target="_blank" rel="noopener" href="https://jwt.io/introduction">jwt.io</a></p>
-<p><a target="_blank" rel="noopener" href="https://tools.ietf.org/html/rfc7519">RFC 7519</a></p>
-<p><a target="_blank" rel="noopener" href="https://github.com/golang-jwt/jwt/blob/main/token.go">token.go</a></p>
+<p>上面我只是对目录进行了简单的概述，详情可通过如下链接查看<a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>
+<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>
 
                 
             </div>
@@ -639,12 +517,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/JWT/">
-                                    <span class="chip bg-color">JWT</span>
+                                <a href="/tags/Golang/">
+                                    <span class="chip bg-color">Golang</span>
                                 </a>
                             
-                                <a href="/tags/token/">
-                                    <span class="chip bg-color">token</span>
+                                <a href="/tags/layout/">
+                                    <span class="chip bg-color">layout</span>
                                 </a>
                             
                         </div>
@@ -816,29 +694,30 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/08/21/notes/time-package-ticker/">
+                <a href="/2021/10/05/notes/golang-layout/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="time包的Ticker">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="golang项目布局">
                         
-                        <span class="card-title">time包的Ticker</span>
+                        <span class="card-title">golang项目布局</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            time包的Ticker学习笔记
+                            golang项目布局学习笔记
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-21
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-05
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -851,6 +730,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -858,8 +738,8 @@
                         <span class="chip bg-color">Golang</span>
                     </a>
                     
-                    <a href="/tags/Ticker/">
-                        <span class="chip bg-color">Ticker</span>
+                    <a href="/tags/layout/">
+                        <span class="chip bg-color">layout</span>
                     </a>
                     
                 </div>
@@ -873,24 +753,24 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/08/14/notes/base32-bian-ma-jie-ma/">
+                <a href="/2021/09/25/notes/fmt-ge-shi-hua-zhi-ling/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="base32编码解码">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="fmt格式化指令">
                         
-                        <span class="card-title">base32编码解码</span>
+                        <span class="card-title">fmt格式化指令</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            base32编码解码学习笔记
+                            fmt格式化指令学习笔记
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-08-14
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
                             </span>
                         <span class="publish-author">
                             
@@ -907,12 +787,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/base32/">
-                        <span class="chip bg-color">base32</span>
-                    </a>
-                    
                     <a href="/tags/Golang/">
                         <span class="chip bg-color">Golang</span>
+                    </a>
+                    
+                    <a href="/tags/fmt/">
+                        <span class="chip bg-color">fmt</span>
                     </a>
                     
                 </div>

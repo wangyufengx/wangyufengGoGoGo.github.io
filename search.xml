@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>golang项目布局</title>
+      <link href="/2021/10/05/notes/golang-layout/"/>
+      <url>/2021/10/05/notes/golang-layout/</url>
+      
+        <content type="html"><![CDATA[<p>​    很多人在使用go的时候会想，golang的项目布局该如何定义，怎样定义才是标准的。实际上go官方并没给出golang项目布局的定义标准。以下是社区应用广泛的一种项目布局。</p><h3 id="golang-standards-project-layout"><a href="#golang-standards-project-layout" class="headerlink" title="golang-standards/project-layout"></a><a href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></h3><p>该布局不是Go核心团队定义的官方标准，它是github上stars数目最多的项目布局。也是Go生态系统中一组常见的项目布局模式。</p><pre class="line-numbers language-none"><code class="language-none">https:&#x2F;&#x2F;github.com&#x2F;golang-standards&#x2F;project-layout<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>项目布局如下：</p><pre class="line-numbers language-none"><code class="language-none">&#x2F;cmd 项目主要应用程序。每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，&#x2F;cmd&#x2F;myapp)。&#x2F;internal 私有应用程序和库代码。（代码不是可重用的或不希望其他人重用它）&#x2F;pkg 外部应用可以使用的库代码。（代码可以导入并在其他项目中使用）&#x2F;api OpenAPI&#x2F;Swagger 规范，JSON 模式文件，协议定义文件。&#x2F;web 特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。&#x2F;configs 配置文件模板或默认配置。&#x2F;init 系统初始化或进程管理配置。&#x2F;scripts 执行各种构建、安装、分析等操作的脚本。&#x2F;build 打包和持续集成。&#x2F;deployments 部署。&#x2F;test 额外的测试应用程序和测试数据。&#x2F;docs 设计和用户文档。&#x2F;tools 项目支持的工具。&#x2F;examples 你的应用程序或公共库示例。&#x2F;third_party 外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。&#x2F;githooks git hooks代码审查。&#x2F;asserts 与存储库一起使用的其他资产(图像、徽标等)。&#x2F;website 如果你不使用 Github 页面，则在这里放置项目的网站数据。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre><p>上面我只是对目录进行了简单的概述，详情可通过如下链接查看<a href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p><h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> golang </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Golang </tag>
+            
+            <tag> layout </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>fmt格式化指令</title>
       <link href="/2021/09/25/notes/fmt-ge-shi-hua-zhi-ling/"/>
       <url>/2021/09/25/notes/fmt-ge-shi-hua-zhi-ling/</url>
