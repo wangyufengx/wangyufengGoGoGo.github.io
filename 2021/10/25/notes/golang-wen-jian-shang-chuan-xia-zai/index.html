@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="golang项目布局, PEAKBRO">
+    <meta name="keywords" content="golang实现文件上传下载, PEAKBRO">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>golang项目布局 | PEAKBRO</title>
+    <title>golang实现文件上传下载 | PEAKBRO</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -288,12 +288,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">golang项目布局</h1>
+                    <h1 class="description center-align post-title">golang实现文件上传下载</h1>
                 </div>
             </div>
         </div>
@@ -413,8 +413,20 @@
                                 <span class="chip bg-color">Golang</span>
                             </a>
                         
-                            <a href="/tags/layout/">
-                                <span class="chip bg-color">layout</span>
+                            <a href="/tags/gin/">
+                                <span class="chip bg-color">gin</span>
+                            </a>
+                        
+                            <a href="/tags/file/">
+                                <span class="chip bg-color">file</span>
+                            </a>
+                        
+                            <a href="/tags/upload/">
+                                <span class="chip bg-color">upload</span>
+                            </a>
+                        
+                            <a href="/tags/download/">
+                                <span class="chip bg-color">download</span>
                             </a>
                         
                     </div>
@@ -438,28 +450,28 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-10-05
+                    2021-10-25
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-05
+                    2021-10-25
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    504
+                    400
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    1 分
+                    2 分
                 </div>
                 
 
@@ -477,32 +489,87 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>​    很多人在使用go的时候会想，golang的项目布局该如何定义，怎样定义才是标准的。实际上go官方并没给出golang项目布局的定义标准。以下是社区应用广泛的一种项目布局。</p>
-<h3 id="golang-standards-project-layout"><a href="#golang-standards-project-layout" class="headerlink" title="golang-standards/project-layout"></a><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></h3><p>该布局不是Go核心团队定义的官方标准，它是github上stars数目最多的项目布局。也是Go生态系统中一组常见的项目布局模式。</p>
-<pre class="line-numbers language-none"><code class="language-none">https:&#x2F;&#x2F;github.com&#x2F;golang-standards&#x2F;project-layout<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h3 id="Gin框架上传下载"><a href="#Gin框架上传下载" class="headerlink" title="Gin框架上传下载"></a>Gin框架上传下载</h3><h4 id="上传（支持批量上传）"><a href="#上传（支持批量上传）" class="headerlink" title="上传（支持批量上传）"></a>上传（支持批量上传）</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">httpRouter<span class="token punctuation">.</span><span class="token function">POST</span><span class="token punctuation">(</span><span class="token string">"/upload"</span><span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>ctx <span class="token operator">*</span>gin<span class="token punctuation">.</span>Context<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		forms<span class="token punctuation">,</span> err <span class="token operator">:=</span> ctx<span class="token punctuation">.</span><span class="token function">MultipartForm</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"error"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+		files <span class="token operator">:=</span> forms<span class="token punctuation">.</span>File<span class="token punctuation">[</span><span class="token string">"fileName"</span><span class="token punctuation">]</span>
+		<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> v <span class="token operator">:=</span> <span class="token keyword">range</span> files <span class="token punctuation">&#123;</span>
+			<span class="token keyword">if</span> err <span class="token operator">:=</span> ctx<span class="token punctuation">.</span><span class="token function">SaveUploadedFile</span><span class="token punctuation">(</span>v<span class="token punctuation">,</span> fmt<span class="token punctuation">.</span><span class="token function">Sprintf</span><span class="token punctuation">(</span><span class="token string">"%s%s"</span><span class="token punctuation">,</span> <span class="token string">"./file/"</span><span class="token punctuation">,</span> v<span class="token punctuation">.</span>Filename<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+				fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"保存文件失败"</span><span class="token punctuation">)</span>
+			<span class="token punctuation">&#125;</span>
+		<span class="token punctuation">&#125;</span>
+	<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>项目布局如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">&#x2F;cmd 项目主要应用程序。每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，&#x2F;cmd&#x2F;myapp)。
-&#x2F;internal 私有应用程序和库代码。（代码不是可重用的或不希望其他人重用它）
-&#x2F;pkg 外部应用可以使用的库代码。（代码可以导入并在其他项目中使用）
-&#x2F;api OpenAPI&#x2F;Swagger 规范，JSON 模式文件，协议定义文件。
-&#x2F;web 特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。
-&#x2F;configs 配置文件模板或默认配置。
-&#x2F;init 系统初始化或进程管理配置。
-&#x2F;scripts 执行各种构建、安装、分析等操作的脚本。
-&#x2F;build 打包和持续集成。
-&#x2F;deployments 部署。
-&#x2F;test 额外的测试应用程序和测试数据。
-&#x2F;docs 设计和用户文档。
-&#x2F;tools 项目支持的工具。
-&#x2F;examples 你的应用程序或公共库示例。
-&#x2F;third_party 外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。
-&#x2F;githooks git hooks代码审查。
-&#x2F;asserts 与存储库一起使用的其他资产(图像、徽标等)。
-&#x2F;website 如果你不使用 Github 页面，则在这里放置项目的网站数据。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h3><pre class="line-numbers language-go" data-language="go"><code class="language-go">httpRouter<span class="token punctuation">.</span><span class="token function">GET</span><span class="token punctuation">(</span><span class="token string">"/download"</span><span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>ctx <span class="token operator">*</span>gin<span class="token punctuation">.</span>Context<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		filePath <span class="token operator">:=</span> ctx<span class="token punctuation">.</span><span class="token function">Query</span><span class="token punctuation">(</span><span class="token string">"url"</span><span class="token punctuation">)</span>
+		<span class="token comment">//打开文件</span>
+		file<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">Open</span><span class="token punctuation">(</span><span class="token string">"./"</span> <span class="token operator">+</span> filePath<span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"打开文件错误"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+		<span class="token keyword">defer</span> file<span class="token punctuation">.</span><span class="token function">Close</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
 
-<p>上面我只是对目录进行了简单的概述，详情可通过如下链接查看<a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>
+		<span class="token comment">//获取文件的名称</span>
+		fileName <span class="token operator">:=</span> path<span class="token punctuation">.</span><span class="token function">Base</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span>
+		ctx<span class="token punctuation">.</span><span class="token function">Header</span><span class="token punctuation">(</span><span class="token string">"Content-Type"</span><span class="token punctuation">,</span> <span class="token string">"application/octet-stream"</span><span class="token punctuation">)</span>
+		ctx<span class="token punctuation">.</span><span class="token function">Header</span><span class="token punctuation">(</span><span class="token string">"Content-Disposition"</span><span class="token punctuation">,</span> <span class="token string">"attachment; url="</span><span class="token operator">+</span>fileName<span class="token punctuation">)</span>
+		ctx<span class="token punctuation">.</span><span class="token function">Header</span><span class="token punctuation">(</span><span class="token string">"Content-Transfer-Encoding"</span><span class="token punctuation">,</span> <span class="token string">"binary"</span><span class="token punctuation">)</span>
+		ctx<span class="token punctuation">.</span><span class="token function">Header</span><span class="token punctuation">(</span><span class="token string">"Cache-Control"</span><span class="token punctuation">,</span> <span class="token string">"no-cache"</span><span class="token punctuation">)</span>
+
+		ctx<span class="token punctuation">.</span><span class="token function">File</span><span class="token punctuation">(</span><span class="token string">"./"</span> <span class="token operator">+</span> filePath<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="原生的上传下载"><a href="#原生的上传下载" class="headerlink" title="原生的上传下载"></a>原生的上传下载</h3><h4 id="上传（支持批量上传）-1"><a href="#上传（支持批量上传）-1" class="headerlink" title="上传（支持批量上传）"></a>上传（支持批量上传）</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">http<span class="token punctuation">.</span><span class="token function">HandleFunc</span><span class="token punctuation">(</span><span class="token string">"/upload"</span><span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>w http<span class="token punctuation">.</span>ResponseWriter<span class="token punctuation">,</span> r <span class="token operator">*</span>http<span class="token punctuation">.</span>Request<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">if</span> err <span class="token operator">:=</span> r<span class="token punctuation">.</span><span class="token function">ParseMultipartForm</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"解析url失败"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+		<span class="token keyword">if</span> r<span class="token punctuation">.</span>Method <span class="token operator">==</span> <span class="token string">"GET"</span> <span class="token punctuation">&#123;</span>
+			files<span class="token punctuation">,</span> err <span class="token operator">:=</span> template<span class="token punctuation">.</span><span class="token function">ParseFiles</span><span class="token punctuation">(</span><span class="token string">"fileName"</span><span class="token punctuation">)</span>
+			<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+				fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"解析文件失败"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+			<span class="token punctuation">&#125;</span>
+			files<span class="token punctuation">.</span><span class="token function">Execute</span><span class="token punctuation">(</span>w<span class="token punctuation">,</span> <span class="token boolean">nil</span><span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+			files <span class="token operator">:=</span> r<span class="token punctuation">.</span>MultipartForm<span class="token punctuation">.</span>File<span class="token punctuation">[</span><span class="token string">"fileName"</span><span class="token punctuation">]</span>
+			<span class="token keyword">for</span> <span class="token boolean">_</span><span class="token punctuation">,</span> v <span class="token operator">:=</span> <span class="token keyword">range</span> files <span class="token punctuation">&#123;</span>
+				f<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">Create</span><span class="token punctuation">(</span><span class="token string">"./file/"</span> <span class="token operator">+</span> v<span class="token punctuation">.</span>Filename<span class="token punctuation">)</span>
+				<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+					fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"创建文件失败"</span><span class="token punctuation">)</span>
+				<span class="token punctuation">&#125;</span>
+				file<span class="token punctuation">,</span> err <span class="token operator">:=</span> v<span class="token punctuation">.</span><span class="token function">Open</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+				<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+					fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"打开文件失败"</span><span class="token punctuation">)</span>
+				<span class="token punctuation">&#125;</span>
+				<span class="token boolean">_</span><span class="token punctuation">,</span> err <span class="token operator">=</span> io<span class="token punctuation">.</span><span class="token function">Copy</span><span class="token punctuation">(</span>f<span class="token punctuation">,</span> file<span class="token punctuation">)</span>
+				<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+					fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"拷贝文件数据失败"</span><span class="token punctuation">)</span>
+				<span class="token punctuation">&#125;</span>
+			<span class="token punctuation">&#125;</span>
+			w<span class="token punctuation">.</span><span class="token function">Write</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token function">byte</span><span class="token punctuation">(</span><span class="token string">"upload success"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+	<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="下载-1"><a href="#下载-1" class="headerlink" title="下载"></a>下载</h4><pre class="line-numbers language-go" data-language="go"><code class="language-go">http<span class="token punctuation">.</span><span class="token function">HandleFunc</span><span class="token punctuation">(</span><span class="token string">"/download"</span><span class="token punctuation">,</span> <span class="token keyword">func</span><span class="token punctuation">(</span>w http<span class="token punctuation">.</span>ResponseWriter<span class="token punctuation">,</span> r <span class="token operator">*</span>http<span class="token punctuation">.</span>Request<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+		<span class="token keyword">if</span> err <span class="token operator">:=</span> r<span class="token punctuation">.</span><span class="token function">ParseForm</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"解析url失败"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+		fileName <span class="token operator">:=</span> r<span class="token punctuation">.</span>Form<span class="token punctuation">[</span><span class="token string">"fileName"</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+		filePath <span class="token operator">:=</span> <span class="token string">"./"</span> <span class="token operator">+</span> fileName
+		<span class="token boolean">_</span><span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">Stat</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token operator">||</span> os<span class="token punctuation">.</span><span class="token function">IsNotExist</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"文件不存在"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+		bytes<span class="token punctuation">,</span> err <span class="token operator">:=</span> os<span class="token punctuation">.</span><span class="token function">ReadFile</span><span class="token punctuation">(</span>filePath<span class="token punctuation">)</span>
+		<span class="token keyword">if</span> err <span class="token operator">!=</span> <span class="token boolean">nil</span> <span class="token punctuation">&#123;</span>
+			fmt<span class="token punctuation">.</span><span class="token function">Println</span><span class="token punctuation">(</span><span class="token string">"读取文件失败"</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+		<span class="token punctuation">&#125;</span>
+		w<span class="token punctuation">.</span><span class="token function">Header</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span><span class="token string">"Content-Type"</span><span class="token punctuation">,</span> <span class="token string">"application/octet-stream"</span><span class="token punctuation">)</span>
+		w<span class="token punctuation">.</span><span class="token function">Header</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">Add</span><span class="token punctuation">(</span><span class="token string">"Content-Disposition"</span><span class="token punctuation">,</span> <span class="token string">"attachment; filename= "</span><span class="token operator">+</span>fileName<span class="token punctuation">)</span>
+		w<span class="token punctuation">.</span><span class="token function">Write</span><span class="token punctuation">(</span>bytes<span class="token punctuation">)</span>
+	<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
 
                 
             </div>
@@ -521,8 +588,20 @@
                                     <span class="chip bg-color">Golang</span>
                                 </a>
                             
-                                <a href="/tags/layout/">
-                                    <span class="chip bg-color">layout</span>
+                                <a href="/tags/gin/">
+                                    <span class="chip bg-color">gin</span>
+                                </a>
+                            
+                                <a href="/tags/file/">
+                                    <span class="chip bg-color">file</span>
+                                </a>
+                            
+                                <a href="/tags/upload/">
+                                    <span class="chip bg-color">upload</span>
+                                </a>
+                            
+                                <a href="/tags/download/">
+                                    <span class="chip bg-color">download</span>
                                 </a>
                             
                         </div>
@@ -694,9 +773,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2021/10/25/notes/golang-wen-jian-shang-chuan-xia-zai/">
                     <div class="card-image">
@@ -714,9 +794,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-25
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-25
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -729,6 +809,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -763,24 +844,24 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/09/25/notes/fmt-ge-shi-hua-zhi-ling/">
+                <a href="/2021/10/05/notes/golang-layout/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="fmt格式化指令">
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="golang项目布局">
                         
-                        <span class="card-title">fmt格式化指令</span>
+                        <span class="card-title">golang项目布局</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            fmt格式化指令学习笔记
+                            golang项目布局学习笔记
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-05
                             </span>
                         <span class="publish-author">
                             
@@ -801,8 +882,8 @@
                         <span class="chip bg-color">Golang</span>
                     </a>
                     
-                    <a href="/tags/fmt/">
-                        <span class="chip bg-color">fmt</span>
+                    <a href="/tags/layout/">
+                        <span class="chip bg-color">layout</span>
                     </a>
                     
                 </div>
