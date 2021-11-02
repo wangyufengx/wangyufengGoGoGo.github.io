@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="golang项目布局, PEAKBRO">
+    <meta name="keywords" content="Gitbook安装使用教程, PEAKBRO">
     <meta name="description" content="">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>golang项目布局 | PEAKBRO</title>
+    <title>Gitbook安装使用教程 | PEAKBRO</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -288,12 +288,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">golang项目布局</h1>
+                    <h1 class="description center-align post-title">Gitbook安装使用教程</h1>
                 </div>
             </div>
         </div>
@@ -409,12 +409,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/Golang/">
-                                <span class="chip bg-color">Golang</span>
+                            <a href="/tags/gitbook/">
+                                <span class="chip bg-color">gitbook</span>
                             </a>
                         
-                            <a href="/tags/layout/">
-                                <span class="chip bg-color">layout</span>
+                            <a href="/tags/note/">
+                                <span class="chip bg-color">note</span>
                             </a>
                         
                     </div>
@@ -425,8 +425,8 @@
                     <div class="post-cate">
                         <i class="fas fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/golang/" class="post-category">
-                                golang
+                            <a href="/categories/gitbook/" class="post-category">
+                                gitbook
                             </a>
                         
                     </div>
@@ -438,21 +438,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-10-05
+                    2021-11-02
                 </div>
                 
 
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-10-05
+                    2021-11-02
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    504
+                    473
                 </div>
                 
 
@@ -477,32 +477,67 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>​    很多人在使用go的时候会想，golang的项目布局该如何定义，怎样定义才是标准的。实际上go官方并没给出golang项目布局的定义标准。以下是社区应用广泛的一种项目布局。</p>
-<h3 id="golang-standards-project-layout"><a href="#golang-standards-project-layout" class="headerlink" title="golang-standards/project-layout"></a><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></h3><p>该布局不是Go核心团队定义的官方标准，它是github上stars数目最多的项目布局。也是Go生态系统中一组常见的项目布局模式。</p>
-<pre class="line-numbers language-none"><code class="language-none">https:&#x2F;&#x2F;github.com&#x2F;golang-standards&#x2F;project-layout<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+                <h2 id="本地Gitbook安装"><a href="#本地Gitbook安装" class="headerlink" title="本地Gitbook安装"></a>本地Gitbook安装</h2><h3 id="安装NodeJs"><a href="#安装NodeJs" class="headerlink" title="安装NodeJs"></a>安装NodeJs</h3><p>gitbook是一个基于Node.js的命令行工具，所以要先安装Node.js。高版本的NodeJs（17.0.1）安装GitBook出现问题，貌似是版本不兼容。NodeJs地址：<a target="_blank" rel="noopener" href="https://nodejs.org/en/">https://nodejs.org/en/</a></p>
+<p>NodeJs都会默认安装npm(包管理工具),所以不需要单独安装npm。</p>
+<p>以下是我安装成功的nodeJs版本信息：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">node -v
+v12.16.3
+<span class="token function">npm</span> -v
+<span class="token number">6.14</span>.4<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>项目布局如下：</p>
-<pre class="line-numbers language-none"><code class="language-none">&#x2F;cmd 项目主要应用程序。每个应用程序的目录名应该与你想要的可执行文件的名称相匹配(例如，&#x2F;cmd&#x2F;myapp)。
-&#x2F;internal 私有应用程序和库代码。（代码不是可重用的或不希望其他人重用它）
-&#x2F;pkg 外部应用可以使用的库代码。（代码可以导入并在其他项目中使用）
-&#x2F;api OpenAPI&#x2F;Swagger 规范，JSON 模式文件，协议定义文件。
-&#x2F;web 特定于 Web 应用程序的组件:静态 Web 资产、服务器端模板和 SPAs。
-&#x2F;configs 配置文件模板或默认配置。
-&#x2F;init 系统初始化或进程管理配置。
-&#x2F;scripts 执行各种构建、安装、分析等操作的脚本。
-&#x2F;build 打包和持续集成。
-&#x2F;deployments 部署。
-&#x2F;test 额外的测试应用程序和测试数据。
-&#x2F;docs 设计和用户文档。
-&#x2F;tools 项目支持的工具。
-&#x2F;examples 你的应用程序或公共库示例。
-&#x2F;third_party 外部辅助工具，分叉代码和其他第三方工具(例如 Swagger UI)。
-&#x2F;githooks git hooks代码审查。
-&#x2F;asserts 与存储库一起使用的其他资产(图像、徽标等)。
-&#x2F;website 如果你不使用 Github 页面，则在这里放置项目的网站数据。<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="安装Gitbook"><a href="#安装Gitbook" class="headerlink" title="安装Gitbook"></a>安装Gitbook</h3><p>打开命令行执行如下命令安装gitbook:</p>
+<pre class="line-numbers language-none"><code class="language-none">npm install -g gitbook-cli<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 
-<p>上面我只是对目录进行了简单的概述，详情可通过如下链接查看<a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>
-<h3 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h3><p><a target="_blank" rel="noopener" href="https://github.com/golang-standards/project-layout">golang-standards/project-layout</a></p>
+<p>检查是否安装成功：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">gitbook -V
+CLI version: <span class="token number">2.3</span>.2
+GitBook version: <span class="token number">3.2</span>.3<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Gitbook的使用"><a href="#Gitbook的使用" class="headerlink" title="Gitbook的使用"></a>Gitbook的使用</h3><h4 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h4><p>创建文件夹（如test）并进入文件夹内，执行以下命令：</p>
+<pre class="line-numbers language-none"><code class="language-none">gitbook init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<p>生成如下文件：</p>
+<pre class="line-numbers language-none"><code class="language-none">README.md
+SUMMARY.md<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<h4 id="文件目录定义"><a href="#文件目录定义" class="headerlink" title="文件目录定义"></a>文件目录定义</h4><p>笔记的目录结构是在<code>SUMMARY.md</code>中定义的。</p>
+<p>例如：</p>
+<pre class="line-numbers language-none"><code class="language-none"># Summary
+
+* [Introduction](README.md)
+
+* [part1](part1&#x2F;README.md)
+
+	* [概述](part1&#x2F;概述.md)
+	
+* [part2](part2&#x2F;README.md)
+
+	* [概述](part2&#x2F;概述.md)<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>目录结构如下：</p>
+<pre class="line-numbers language-none"><code class="language-none">├── book.json	#引入插件时创建
+├── README.md
+├── SUMMARY.md	#目录结构
+├── part1&#x2F;
+|   ├── README.md
+|   └── 概述.md
+└── part2&#x2F;
+    ├── README.md
+    └── 概述.md<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h4 id="构建"><a href="#构建" class="headerlink" title="构建"></a>构建</h4><p>使用下面命令构建笔记</p>
+<pre class="line-numbers language-none"><code class="language-none">gitbook build<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h4><p>使用下面命令启动笔记，本地访问<a href="http://localhost:4000查看书籍。">http://localhost:4000查看书籍。</a></p>
+<pre class="line-numbers language-none"><code class="language-none">gitbook serve<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h2 id="创建Github仓库"><a href="#创建Github仓库" class="headerlink" title="创建Github仓库"></a>创建Github仓库</h2><p>在github上创建一个仓库，将文件夹下的内容上传到github仓库。</p>
+<h2 id="云端Gitbook"><a href="#云端Gitbook" class="headerlink" title="云端Gitbook"></a>云端Gitbook</h2><p>点击<code>new space</code>创建一个书籍。</p>
+<p>在最右上角的选择启用github同步并进行相关配置。需要身份验证并且会将gitbook安装到您的github上（可选择一个仓库还是所有仓库都安装gitbook）。</p>
+<p>官方说明如下：</p>
+<p><a target="_blank" rel="noopener" href="https://docs.gitbook.com/integrations/git-sync/enabling-github-sync">https://docs.gitbook.com/integrations/git-sync/enabling-github-sync</a></p>
+<p>此时你的电子书已搭建完成。可点击<code>Publish</code>可公开笔记并且可在get the link`输入框下看到笔记的网址。</p>
+<h3 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h3><p><a target="_blank" rel="noopener" href="https://docs.gitbook.com/integrations/git-sync/enabling-github-sync">https://docs.gitbook.com/integrations/git-sync/enabling-github-sync</a></p>
 
                 
             </div>
@@ -517,12 +552,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/Golang/">
-                                    <span class="chip bg-color">Golang</span>
+                                <a href="/tags/gitbook/">
+                                    <span class="chip bg-color">gitbook</span>
                                 </a>
                             
-                                <a href="/tags/layout/">
-                                    <span class="chip bg-color">layout</span>
+                                <a href="/tags/note/">
+                                    <span class="chip bg-color">note</span>
                                 </a>
                             
                         </div>
@@ -694,9 +729,64 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
+            <div class="card">
+                <a href="/2021/11/02/notes/gitbook-an-zhuang-shi-yong-jiao-cheng/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Gitbook安装使用教程">
+                        
+                        <span class="card-title">Gitbook安装使用教程</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Gitbook安装使用教程
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-11-02
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/gitbook/" class="post-category">
+                                    gitbook
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/gitbook/">
+                        <span class="chip bg-color">gitbook</span>
+                    </a>
+                    
+                    <a href="/tags/note/">
+                        <span class="chip bg-color">note</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
             <div class="card">
                 <a href="/2021/10/25/notes/golang-wen-jian-shang-chuan-xia-zai/">
                     <div class="card-image">
@@ -714,9 +804,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-10-25
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-10-25
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-bookmark fa-fw icon-category"></i>
@@ -750,59 +840,6 @@
                     
                     <a href="/tags/download/">
                         <span class="chip bg-color">download</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/09/25/notes/fmt-ge-shi-hua-zhi-ling/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="fmt格式化指令">
-                        
-                        <span class="card-title">fmt格式化指令</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            fmt格式化指令学习笔记
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-09-25
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/golang/" class="post-category">
-                                    golang
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Golang/">
-                        <span class="chip bg-color">Golang</span>
-                    </a>
-                    
-                    <a href="/tags/fmt/">
-                        <span class="chip bg-color">fmt</span>
                     </a>
                     
                 </div>
